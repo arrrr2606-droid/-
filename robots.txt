@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alfa-machinery.ru/sitemap.xml
+Sitemap: https://arrrr2606-droid.github.io/-/sitemap.xml

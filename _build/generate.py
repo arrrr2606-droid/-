@@ -235,6 +235,12 @@ def rel(depth):
     return "../" * depth
 
 
+def base_path(cfg):
+    """Подпапка, в которой лежит сайт: «/-» для github.io/-/, пусто для своего домена."""
+    after_host = cfg["domain"].split("//", 1)[-1].partition("/")[2].strip("/")
+    return "/" + after_host if after_host else ""
+
+
 def full_address(cfg):
     """Город и улица через запятую; пока улица не заполнена — только город."""
     return ", ".join(part for part in (cfg["city"], cfg["address"]) if part.strip())
@@ -1396,21 +1402,25 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
                   "contacts.html", body)
 
     def build_404(self):
+        """Страница ошибки отдаётся с любого пути, поэтому ссылки в ней —
+        только от корня сайта. На GitHub Pages корень проекта лежит в подпапке,
+        её и подставляем из адреса в конфиге."""
         cfg = self.cfg
+        base = base_path(cfg)
         markup = (head(cfg, 0, f"Страница не найдена | {cfg['company']}",
                        "Такой страницы нет — вернитесь в каталог техники.", "404.html")
-                  .replace('href="assets/', 'href="/assets/')
+                  .replace('href="assets/', f'href="{base}/assets/')
                   + f"""<main class="section hex-bg" style="min-height:70vh;display:grid;place-items:center">
 <div class="shell" style="text-align:center;max-width:640px">
 <p class="eyebrow" style="justify-content:center">Ошибка 404</p>
 <h1>Страница не найдена</h1>
 <p>Возможно, адрес устарел или модель переехала в другую категорию.</p>
-<p style="margin-top:26px"><a class="btn" href="/catalog/index.html">Открыть каталог</a></p>
-<p><a class="link-arrow" href="/index.html" style="justify-content:center">На главную</a></p>
+<p style="margin-top:26px"><a class="btn" href="{base}/catalog/index.html">Открыть каталог</a></p>
+<p><a class="link-arrow" href="{base}/index.html" style="justify-content:center">На главную</a></p>
 </div>
 </main>
-<script src="/assets/js/config.js"></script>
-<script src="/assets/js/site.js"></script>
+<script src="{base}/assets/js/config.js"></script>
+<script src="{base}/assets/js/site.js"></script>
 </body>
 </html>
 """)

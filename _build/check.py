@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Проверяет собранный сайт: битые внутренние ссылки, картинки, дубли title."""
 
+import json
 import os
 import re
 import sys
@@ -9,6 +10,14 @@ import urllib.parse
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKIP_DIRS = {"_build", "data", "ФИРМЕННЫЙ СТИЛЬ ", ".git"}
 ATTR = re.compile(r'(?:href|src)="([^"]+)"')
+
+
+def base_path():
+    """Подпапка деплоя из конфига — ссылки от корня сайта начинаются с неё."""
+    with open(os.path.join(ROOT, "data", "site-config.json"), encoding="utf-8") as f:
+        domain = json.load(f)["domain"]
+    after_host = domain.split("//", 1)[-1].partition("/")[2].strip("/")
+    return "/" + after_host if after_host else ""
 
 
 def pages():
@@ -23,6 +32,7 @@ def main():
     problems = []
     titles = {}
     checked = 0
+    base = base_path()
 
     for path in pages():
         rel_page = os.path.relpath(path, ROOT)
@@ -40,8 +50,14 @@ def main():
             if not target:
                 continue
             # 404.html ссылается от корня сайта, остальные страницы — относительно себя.
-            base = ROOT if target.startswith("/") else os.path.dirname(path)
-            resolved = os.path.normpath(os.path.join(base, target.lstrip("/")))
+            if target.startswith("/"):
+                if base and not target.startswith(base + "/"):
+                    problems.append(f"{rel_page}: «{raw}» без префикса подпапки «{base}»")
+                    continue
+                anchor, target = ROOT, target[len(base):]
+            else:
+                anchor = os.path.dirname(path)
+            resolved = os.path.normpath(os.path.join(anchor, target.lstrip("/")))
             checked += 1
             if not os.path.exists(resolved):
                 problems.append(f"{rel_page}: не найдено «{raw}»")
