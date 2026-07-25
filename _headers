@@ -1,0 +1,24 @@
+# Заголовки для Cloudflare Pages и Netlify.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# Страницы пересобираются вручную — браузер должен каждый раз проверять свежесть.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Шрифты не меняются, их можно держать в кэше долго.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Фотографии техники и логотипы обновляются редко.
+/assets/img/*
+  Cache-Control: public, max-age=604800
+
+/assets/css/*
+  Cache-Control: public, max-age=86400
+
+/assets/js/*
+  Cache-Control: public, max-age=86400
