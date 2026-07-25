@@ -1,0 +1,19 @@
+{
+  "company": "Альфа Машинери",
+  "legalName": "ООО «Альфа Машинери»",
+  "tagline": "Техника. Сервис. Запчасти.",
+  "domain": "https://alfa-machinery.ru",
+  "phone": "+7 917 756-26-06",
+  "phoneHref": "+79177562606",
+  "email": "alfa-mash@bk.ru",
+  "city": "Уфа",
+  "address": "",
+  "hours": "Пн–Пт 9:00–18:00",
+  "inn": "",
+  "ogrn": "",
+  "formEndpoint": "ВСТАВЬТЕ_СЮДА_URL_FORMSPREE",
+  "messengers": {
+    "whatsapp": "https://wa.me/79177562606",
+    "telegram": ""
+  }
+}
