@@ -181,6 +181,65 @@
     show(0);
   }
 
+  /* --- Карусель на главной ----------------------------------- */
+
+  function initHeroCarousel() {
+    $$("[data-hero-carousel]").forEach(function (root) {
+      var slides = $$(".hero-carousel__slide", root);
+      var dots = $$(".hero-carousel__dot", root);
+      if (slides.length < 2) return;
+
+      var index = 0;
+      var timer = null;
+      var reduceMotion = window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function show(next) {
+        index = (next + slides.length) % slides.length;
+        slides.forEach(function (slide, i) {
+          var active = i === index;
+          slide.classList.toggle("is-active", active);
+          slide.setAttribute("aria-hidden", String(!active));
+        });
+        dots.forEach(function (dot, i) {
+          var active = i === index;
+          dot.classList.toggle("is-active", active);
+          dot.setAttribute("aria-current", String(active));
+        });
+      }
+
+      function step(delta) {
+        show(index + delta);
+      }
+
+      function stop() {
+        if (timer) window.clearInterval(timer);
+        timer = null;
+      }
+
+      function start() {
+        if (reduceMotion || timer) return;
+        timer = window.setInterval(function () { step(1); }, 4800);
+      }
+
+      var prev = $(".hero-carousel__nav--prev", root);
+      var next = $(".hero-carousel__nav--next", root);
+      if (prev) prev.addEventListener("click", function () { stop(); step(-1); start(); });
+      if (next) next.addEventListener("click", function () { stop(); step(1); start(); });
+      dots.forEach(function (dot, i) {
+        dot.addEventListener("click", function () { stop(); show(i); start(); });
+      });
+
+      root.addEventListener("mouseenter", stop);
+      root.addEventListener("mouseleave", start);
+      root.addEventListener("focusin", stop);
+      root.addEventListener("focusout", start);
+
+      show(0);
+      start();
+    });
+  }
+
   /* --- Фильтры и сортировка каталога ------------------------- */
 
   function initCatalog() {
@@ -364,6 +423,7 @@
     initTabs();
     initAccordion();
     initGallery();
+    initHeroCarousel();
     initCatalog();
     initPhoneMask();
     initForms();

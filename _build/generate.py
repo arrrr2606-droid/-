@@ -627,8 +627,38 @@ class Site:
             if hero_photo:
                 hero_item = candidate
                 break
-        hero_img = (f'<img src="{esc(hero_photo["src"])}" alt="{esc(hero_item["name"])}" '
-                    f'width="1200" height="900" fetchpriority="high">' if hero_photo else "")
+        hero_slides = [
+            ("assets/img/machines/umg/e225c/e225c-2.jpg", "Гусеничный экскаватор UMG E225C"),
+            ("assets/img/machines/umg/wl50/wl50-1.jpg", "Фронтальный погрузчик UMG WL50"),
+            ("assets/img/machines/umg/ag-140/ag-140-1.jpg", "Автогрейдер UMG AG-140"),
+        ]
+        hero_img = """<div class="hero-carousel" data-hero-carousel aria-label="Фотографии спецтехники">
+<div class="hero-carousel__track">
+{slides}
+</div>
+<button class="hero-carousel__nav hero-carousel__nav--prev" type="button" aria-label="Предыдущее фото"></button>
+<button class="hero-carousel__nav hero-carousel__nav--next" type="button" aria-label="Следующее фото"></button>
+<div class="hero-carousel__dots" aria-label="Выбор фото">
+{dots}
+</div>
+</div>""".format(
+            slides="\n".join(
+                '<div class="hero-carousel__slide{active}" aria-hidden="{hidden}">'
+                '<img src="{src}" alt="{alt}" width="1200" height="900" {loading}></div>'.format(
+                    active=" is-active" if i == 0 else "",
+                    hidden="false" if i == 0 else "true",
+                    src=esc(src),
+                    alt=esc(alt),
+                    loading='fetchpriority="high"' if i == 0 else 'loading="lazy"',
+                )
+                for i, (src, alt) in enumerate(hero_slides)
+            ),
+            dots="\n".join(
+                f'<button class="hero-carousel__dot{" is-active" if i == 0 else ""}" '
+                f'type="button" aria-label="Фото {i + 1}" aria-current="{"true" if i == 0 else "false"}"></button>'
+                for i in range(len(hero_slides))
+            ),
+        )
 
         tiles = "".join(self.category_tile(0, c) for c in self.categories)
         popular = [i for i in self.items if i["photos"]][:6]
