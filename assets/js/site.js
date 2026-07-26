@@ -312,6 +312,10 @@
           body: new FormData(form),
         })
           .then(function (res) {
+            if (!res.ok && isFormspree(endpoint) && (res.status === 401 || res.status === 403)) {
+              submitNative(form, endpoint);
+              return;
+            }
             if (!res.ok) throw new Error("HTTP " + res.status);
             form.reset();
             say(status, "ok", "Заявка отправлена. Мы свяжемся с вами в рабочее время.");
@@ -355,6 +359,16 @@
     node.innerHTML = html;
     node.hidden = false;
     node.classList.toggle("form__status--error", kind === "error");
+  }
+
+  function isFormspree(endpoint) {
+    return /^https:\/\/formspree\.io\/f\//.test(endpoint || "");
+  }
+
+  function submitNative(form, endpoint) {
+    form.action = endpoint;
+    form.method = "POST";
+    HTMLFormElement.prototype.submit.call(form);
   }
 
   /* --- Запуск ------------------------------------------------- */

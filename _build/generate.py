@@ -444,6 +444,8 @@ def footer(cfg, depth, categories):
 
 
 def request_form(cfg, form_id, subject, hidden=None, compact=False):
+    endpoint = cfg.get("formEndpoint", "")
+    action = "" if not endpoint or "ВСТАВЬТЕ" in endpoint else f' action="{esc(endpoint)}" method="POST"'
     hidden_html = "".join(
         f'<input type="hidden" name="{esc(k)}" value="{esc(v)}">' for k, v in (hidden or {}).items())
     message = "" if compact else f"""
@@ -452,7 +454,7 @@ def request_form(cfg, form_id, subject, hidden=None, compact=False):
 <textarea id="{form_id}-msg" name="Комментарий" rows="4" placeholder="Модель техники, регион работы, сроки"></textarea>
 </div>"""
 
-    return f"""<form class="form" data-form data-subject="{esc(subject)}" novalidate>
+    return f"""<form class="form" data-form data-subject="{esc(subject)}"{action} novalidate>
 {hidden_html}
 <input type="hidden" name="_subject" value="{esc(subject)}">
 <div class="form__row">
