@@ -272,6 +272,21 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
+METRIKA_COUNTER = '''<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111042579', 'ym');
+
+    ym(111042579, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111042579" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->'''
+
+
 def head(cfg, depth, title, description, canonical, extra=""):
     base = rel(depth)
     return f"""<!DOCTYPE html>
@@ -291,6 +306,7 @@ def head(cfg, depth, title, description, canonical, extra=""):
 <link rel="icon" type="image/png" sizes="32x32" href="{base}assets/img/brand/favicon-32.png">
 <link rel="apple-touch-icon" href="{base}assets/img/brand/favicon-180.png">
 <link rel="stylesheet" href="{base}assets/css/main.css">
+{METRIKA_COUNTER}
 {extra}</head>
 <body>
 """
