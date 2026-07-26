@@ -11,7 +11,7 @@
   "hours": "Пн–Пт 9:00–18:00",
   "inn": "",
   "ogrn": "",
-  "formEndpoint": "ВСТАВЬТЕ_СЮДА_URL_FORMSPREE",
+  "formEndpoint": "https://formspree.io/f/mdaqyojv",
   "messengers": {
     "whatsapp": "https://wa.me/79177562606",
     "telegram": ""
