@@ -699,7 +699,7 @@ class Site:
 <section class="section section--deep" style="padding-top:0;padding-bottom:0">
 <div class="shell" style="padding:0">
 <div class="stats">
-<div class="stats__item"><p class="stats__value">2</p><p class="stats__label">завода-производителя, чью технику мы поставляем напрямую</p></div>
+<div class="stats__item"><p class="stats__value">4</p><p class="stats__label">завода-производителя, чью технику мы поставляем напрямую</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.items)}</p><p class="stats__label">моделей техники в каталоге с полными характеристиками</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.categories)}</p><p class="stats__label">категорий: от мини-погрузчиков до снегоболотоходов</p></div>
 <div class="stats__item"><p class="stats__value">24/7</p><p class="stats__label">приём заявок на сервис и подбор запчастей</p></div>
