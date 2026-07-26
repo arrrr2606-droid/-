@@ -272,6 +272,8 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
+ASSET_VERSION = "20260726-forms"
+
 METRIKA_COUNTER = '''<!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -436,8 +438,8 @@ def footer(cfg, depth, categories):
 </div>
 </div>
 </footer>
-<script src="{base}assets/js/config.js"></script>
-<script src="{base}assets/js/site.js"></script>
+<script src="{base}assets/js/config.js?v={ASSET_VERSION}"></script>
+<script src="{base}assets/js/site.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 """
@@ -1435,8 +1437,8 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <p><a class="link-arrow" href="{base}/index.html" style="justify-content:center">На главную</a></p>
 </div>
 </main>
-<script src="{base}/assets/js/config.js"></script>
-<script src="{base}/assets/js/site.js"></script>
+<script src="{base}/assets/js/config.js?v={ASSET_VERSION}"></script>
+<script src="{base}/assets/js/site.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 """)
