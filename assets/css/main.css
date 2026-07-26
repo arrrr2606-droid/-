@@ -1072,6 +1072,16 @@ li {
   margin-top: 0;
 }
 
+.prose h2 {
+  margin-top: 1.8em;
+  margin-bottom: 0.55em;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
 .prose li::marker {
   color: var(--alpha-green);
 }
