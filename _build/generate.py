@@ -120,8 +120,7 @@ ADVANTAGES = [
      "простой машины стоит дороже детали."),
     ("Собственный сервис", "Гарантийный и постгарантийный ремонт, выездные бригады, "
      "плановое обслуживание по наработке."),
-    ("Лизинг и trade-in", "Подбираем схему финансирования под ваш парк, принимаем "
-     "технику в зачёт."),
+    ("Лизинг", "Подбираем схему финансирования под ваш парк."),
 ]
 
 FINANCING_STEPS = [
@@ -670,7 +669,7 @@ class Site:
 <div class="hero__badges">
 <span class="badge badge--green">{esc(cfg['tagline'])}</span>
 <span class="badge badge--outline">Заводская гарантия</span>
-<span class="badge badge--outline">Лизинг и trade-in</span>
+<span class="badge badge--outline">Лизинг</span>
 </div>
 </div>
 <div class="hero__media">{hero_img}</div>
@@ -1252,14 +1251,13 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <div class="shell">
 <div class="section__head">
 <p class="eyebrow">Финансирование</p>
-<h1>Лизинг и trade-in</h1>
+<h1>Лизинг</h1>
 <p>Техника окупается в работе, а не на стоянке. Помогаем взять машину в лизинг с посильным
 авансом и графиком платежей под сезонность вашей выручки.</p>
 </div>
 <div class="grid grid--3">
 {icon_card('handshake', 'Лизинг для юрлиц и ИП', 'Аванс от 10%, срок до 60 месяцев. Предмет лизинга остаётся обеспечением — дополнительный залог обычно не нужен.')}
 {icon_card('doc', 'Налоговая выгода', 'Лизинговые платежи относятся на расходы, НДС принимается к вычету. Возможна ускоренная амортизация.')}
-{icon_card('truck', 'Trade-in', 'Принимаем вашу технику в зачёт стоимости новой — оцениваем по состоянию и наработке.')}
 </div>
 </div>
 </section>
@@ -1280,9 +1278,9 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
            "и покажем итоговое удорожание.")}
 </main>""")
 
-        self.page("financing.html", 0, f"Лизинг спецтехники и trade-in | {cfg['company']}",
+        self.page("financing.html", 0, f"Лизинг спецтехники | {cfg['company']}",
                   "Лизинг техники UMG и ЗЗГТ для юридических лиц и ИП: аванс от 10%, срок до 60 "
-                  "месяцев, приём техники в trade-in.",
+                  "месяцев.",
                   "financing.html", body)
 
     def build_about(self):
