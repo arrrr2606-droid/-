@@ -257,6 +257,11 @@ li {
   width: 100%;
 }
 
+.btn--small {
+  padding: 11px 18px;
+  font-size: 0.76rem;
+}
+
 .btn[disabled] {
   opacity: 0.55;
   pointer-events: none;
@@ -1492,6 +1497,56 @@ a.contact-list__value:hover {
   color: var(--graphite);
 }
 
+/* --- Cookie-уведомление ----------------------------------- */
+
+.cookie-banner {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  color: var(--white);
+  background: rgba(18, 18, 18, 0.96);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.cookie-banner__text {
+  display: grid;
+  gap: 6px;
+  max-width: 720px;
+}
+
+.cookie-banner__text strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.cookie-banner__text p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.cookie-banner__text a {
+  color: var(--alpha-green);
+  font-weight: 700;
+}
+
+.cookie-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 /* --- Подвал ------------------------------------------------ */
 
 .footer {
@@ -1695,6 +1750,20 @@ a.contact-list__value:hover {
     width: 100%;
   }
 
+  .cookie-banner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .cookie-banner__actions {
+    justify-content: stretch;
+  }
+
+  .cookie-banner__actions .btn {
+    flex: 1 1 100%;
+  }
+
   .product__actions .btn,
   .hero__actions .btn {
     flex: 1 1 100%;
@@ -1729,7 +1798,8 @@ a.contact-list__value:hover {
   .footer,
   .filters,
   .product__actions,
-  .cta {
+  .cta,
+  .cookie-banner {
     display: none;
   }
 

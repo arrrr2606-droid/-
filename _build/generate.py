@@ -272,21 +272,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260726-forms"
-
-METRIKA_COUNTER = '''<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111042579', 'ym');
-
-    ym(111042579, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/111042579" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->'''
+ASSET_VERSION = "20260726-cookies"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -308,7 +294,6 @@ def head(cfg, depth, title, description, canonical, extra=""):
 <link rel="icon" type="image/png" sizes="32x32" href="{base}assets/img/brand/favicon-32.png">
 <link rel="apple-touch-icon" href="{base}assets/img/brand/favicon-180.png">
 <link rel="stylesheet" href="{base}assets/css/main.css">
-{METRIKA_COUNTER}
 {extra}</head>
 <body>
 """
@@ -1383,7 +1368,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <div class="section__head">
 <p class="eyebrow">Персональные данные</p>
 <h1>Согласие на обработку персональных данных</h1>
-<p>Редакция от 26 июля 2026 года.</p>
+<p>Редакция от 28 июля 2026 года.</p>
 </div>
 <div class="prose legal-text">
 <p>Настоящим пользователь сайта <a href="{esc(cfg['domain'])}">{esc(cfg['domain'])}</a>, заполняя форму заявки и проставляя отметку о согласии, свободно, своей волей и в своём интересе даёт согласие {esc(cfg['legalName'])} на обработку персональных данных на условиях, изложенных ниже.</p>
@@ -1414,6 +1399,10 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 
 <h2>9. Подтверждение согласия</h2>
 <p>Отправляя форму на сайте, пользователь подтверждает, что ознакомлен с настоящим согласием, понимает его содержание и выражает конкретное, предметное, информированное, сознательное и однозначное согласие на обработку персональных данных.</p>
+
+<h2>10. Cookies и аналитика</h2>
+<p>Сайт может использовать cookies — небольшие файлы, которые сохраняются в браузере и помогают обеспечить работу сайта, а также оценивать посещаемость. Для аналитики используется Яндекс Метрика, которая может обрабатывать технические сведения: IP-адрес, данные браузера и устройства, посещённые страницы и действия на сайте.</p>
+<p>Аналитические cookies и Яндекс Метрика подключаются только после выбора пользователем действия «Принять» в уведомлении о cookies. Пользователь может выбрать «Отклонить»; это не ограничивает доступ к материалам и формам сайта.</p>
 </div>
 </div>
 </section>

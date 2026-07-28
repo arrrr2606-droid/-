@@ -371,6 +371,85 @@
     HTMLFormElement.prototype.submit.call(form);
   }
 
+  /* --- Cookies и аналитика ----------------------------------- */
+
+  var COOKIE_KEY = "alfa_cookie_consent";
+  var METRIKA_ID = 111042579;
+
+  function initCookieConsent() {
+    var choice = getCookieChoice();
+    if (choice === "accepted") {
+      loadMetrika();
+      return;
+    }
+    if (choice === "rejected") return;
+    showCookieBanner();
+  }
+
+  function getCookieChoice() {
+    try {
+      return localStorage.getItem(COOKIE_KEY);
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function setCookieChoice(value) {
+    try {
+      localStorage.setItem(COOKIE_KEY, value);
+    } catch (e) {}
+  }
+
+  function showCookieBanner() {
+    var banner = document.createElement("div");
+    banner.className = "cookie-banner";
+    banner.setAttribute("role", "dialog");
+    banner.setAttribute("aria-live", "polite");
+    banner.innerHTML =
+      '<div class="cookie-banner__text">' +
+      '<strong>Cookies</strong>' +
+      '<p>Мы используем cookies и Яндекс Метрику для анализа посещаемости сайта. ' +
+      'Нажимая «Принять», вы соглашаетесь с использованием аналитических cookies.</p>' +
+      '<a href="/personal-data-consent.html">Подробнее</a>' +
+      '</div>' +
+      '<div class="cookie-banner__actions">' +
+      '<button type="button" class="btn btn--small" data-cookie-accept>Принять</button>' +
+      '<button type="button" class="btn btn--small btn--ghost" data-cookie-reject>Отклонить</button>' +
+      '</div>';
+    document.body.appendChild(banner);
+
+    $("[data-cookie-accept]", banner).addEventListener("click", function () {
+      setCookieChoice("accepted");
+      banner.remove();
+      loadMetrika();
+    });
+    $("[data-cookie-reject]", banner).addEventListener("click", function () {
+      setCookieChoice("rejected");
+      banner.remove();
+    });
+  }
+
+  function loadMetrika() {
+    if (window.__alfaMetrikaLoaded) return;
+    window.__alfaMetrikaLoaded = true;
+    window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
+    window.ym.l = 1 * new Date();
+    var script = document.createElement("script");
+    script.async = true;
+    script.src = "https://mc.yandex.ru/metrika/tag.js?id=" + METRIKA_ID;
+    document.head.appendChild(script);
+    window.ym(METRIKA_ID, "init", {
+      ssr: true,
+      webvisor: true,
+      clickmap: true,
+      ecommerce: "dataLayer",
+      referrer: document.referrer,
+      url: location.href,
+      accurateTrackBounce: true,
+      trackLinks: true
+    });
+  }
+
   /* --- Запуск ------------------------------------------------- */
 
   function boot() {
@@ -381,6 +460,7 @@
     initCatalog();
     initPhoneMask();
     initForms();
+    initCookieConsent();
   }
 
   if (document.readyState === "loading") {
