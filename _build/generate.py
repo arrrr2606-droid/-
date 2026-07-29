@@ -293,7 +293,7 @@ def head(cfg, depth, title, description, canonical, extra=""):
 <meta property="og:url" content="{esc(cfg['domain'] + '/' + canonical)}">
 <link rel="icon" type="image/png" sizes="32x32" href="{base}assets/img/brand/favicon-32.png">
 <link rel="apple-touch-icon" href="{base}assets/img/brand/favicon-180.png">
-<link rel="stylesheet" href="{base}assets/css/main.css">
+<link rel="stylesheet" href="{base}assets/css/main.css?v={ASSET_VERSION}">
 {extra}</head>
 <body>
 """
