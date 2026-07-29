@@ -272,7 +272,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260729-hero-carousel"
+ASSET_VERSION = "20260729-hero-mix"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -628,20 +628,19 @@ class Site:
 
     def build_home(self):
         cfg = self.cfg
-        # В герое нужны живые кадры, а не студийные вырезки на белом.
-        hero_photos, hero_item = [], None
-        for candidate in ([i for i in self.items if i["slug"] == "e225c"] + self.items):
-            candidate_photos = [p for p in candidate["photos"] if not p["cutout"]]
-            if candidate_photos:
-                hero_photos = candidate_photos[:4]
-                hero_item = candidate
-                break
+        # Показываем разные типы техники, используя живые кадры, а не вырезки.
+        hero_photos = []
+        for slug in ("e225c", "wl30", "ag-140", "gaz-34039"):
+            candidate = next((i for i in self.items if i["slug"] == slug), None)
+            photo = next((p for p in candidate["photos"] if not p["cutout"]), None) if candidate else None
+            if photo:
+                hero_photos.append((candidate, photo))
         hero_slides = "".join(
             f'<div class="hero-carousel__slide" aria-hidden="{str(n != 0).lower()}">'
-            f'<img src="{esc(photo["src"])}" alt="{esc(hero_item["name"])}" width="1200" height="900" '
+            f'<img src="{esc(photo["src"])}" alt="{esc(item["name"])}" width="1200" height="900" '
             + ('fetchpriority="high">' if n == 0 else 'loading="lazy">')
             + '</div>'
-            for n, photo in enumerate(hero_photos)
+            for n, (item, photo) in enumerate(hero_photos)
         )
         hero_dots = "".join(
             f'<button type="button" class="hero-carousel__dot" data-hero-carousel-dot '
