@@ -181,6 +181,87 @@
     show(0);
   }
 
+  /* --- Карусель на первом экране ----------------------------- */
+
+  function initHeroCarousel() {
+    var root = $("[data-hero-carousel]");
+    if (!root) return;
+
+    var track = $(".hero-carousel__track", root);
+    var slides = $$(".hero-carousel__slide", root);
+    var dots = $$("[data-hero-carousel-dot]", root);
+    var prev = $("[data-hero-carousel-prev]", root);
+    var next = $("[data-hero-carousel-next]", root);
+    if (!track || slides.length < 2 || !prev || !next) return;
+
+    var index = 0;
+    var timer = null;
+    var reducedMotion = window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function show(target) {
+      index = (target + slides.length) % slides.length;
+      track.style.transform = "translateX(-" + (index * 100) + "%)";
+      slides.forEach(function (slide, n) {
+        slide.setAttribute("aria-hidden", String(n !== index));
+      });
+      dots.forEach(function (dot, n) {
+        dot.setAttribute("aria-current", String(n === index));
+      });
+    }
+
+    function stop() {
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    }
+
+    function start() {
+      if (reducedMotion || timer) return;
+      timer = window.setInterval(function () { show(index + 1); }, 5500);
+    }
+
+    function move(step) {
+      show(index + step);
+      stop();
+      start();
+    }
+
+    prev.addEventListener("click", function () { move(-1); });
+    next.addEventListener("click", function () { move(1); });
+    dots.forEach(function (dot, n) {
+      dot.addEventListener("click", function () {
+        show(n);
+        stop();
+        start();
+      });
+    });
+    root.addEventListener("mouseenter", stop);
+    root.addEventListener("mouseleave", start);
+    root.addEventListener("focusin", stop);
+    root.addEventListener("focusout", function () {
+      window.setTimeout(function () {
+        if (!root.contains(document.activeElement)) start();
+      }, 0);
+    });
+    root.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        move(-1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        move(1);
+      }
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    show(0);
+    start();
+  }
+
   /* --- Фильтры и сортировка каталога ------------------------- */
 
   function initCatalog() {
@@ -457,6 +538,7 @@
     initTabs();
     initAccordion();
     initGallery();
+    initHeroCarousel();
     initCatalog();
     initPhoneMask();
     initForms();

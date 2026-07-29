@@ -545,8 +545,90 @@ li {
 }
 
 .hero__media img {
+  display: block;
   width: 100%;
+}
+
+.hero-carousel {
+  position: relative;
+}
+
+.hero-carousel__viewport {
+  overflow: hidden;
   clip-path: polygon(28px 0, 100% 0, calc(100% - 28px) 100%, 0 100%);
+}
+
+.hero-carousel__track {
+  display: flex;
+  transition: transform 0.45s var(--ease);
+}
+
+.hero-carousel__slide {
+  flex: 0 0 100%;
+}
+
+.hero-carousel__slide img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.hero-carousel__control {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  color: var(--white);
+  background: rgba(10, 10, 10, 0.76);
+  font-size: 1.5rem;
+  line-height: 1;
+  place-items: center;
+  transform: translateY(-50%);
+  transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.hero-carousel__control:hover,
+.hero-carousel__control:focus-visible {
+  border-color: var(--alpha-green);
+  color: var(--graphite);
+  background: var(--alpha-green);
+}
+
+.hero-carousel__control--prev {
+  left: 14px;
+}
+
+.hero-carousel__control--next {
+  right: 14px;
+}
+
+.hero-carousel__dots {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+}
+
+.hero-carousel__dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid var(--white);
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.18s var(--ease), transform 0.18s var(--ease);
+}
+
+.hero-carousel__dot[aria-current="true"] {
+  border-color: var(--alpha-green);
+  background: var(--alpha-green);
+  transform: scale(1.18);
 }
 
 .hero__badges {
@@ -1710,6 +1792,11 @@ a.contact-list__value:hover {
 
   .hero__media {
     order: -1;
+  }
+
+  .hero-carousel__control {
+    width: 40px;
+    height: 40px;
   }
 
   .tabs__list {

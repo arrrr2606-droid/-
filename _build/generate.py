@@ -272,7 +272,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260726-cookies"
+ASSET_VERSION = "20260729-hero-carousel"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -628,15 +628,33 @@ class Site:
 
     def build_home(self):
         cfg = self.cfg
-        # В герое нужен живой кадр, а не студийная вырезка на белом.
-        hero_photo, hero_item = None, None
+        # В герое нужны живые кадры, а не студийные вырезки на белом.
+        hero_photos, hero_item = [], None
         for candidate in ([i for i in self.items if i["slug"] == "e225c"] + self.items):
-            hero_photo = next((p for p in candidate["photos"] if not p["cutout"]), None)
-            if hero_photo:
+            candidate_photos = [p for p in candidate["photos"] if not p["cutout"]]
+            if candidate_photos:
+                hero_photos = candidate_photos[:4]
                 hero_item = candidate
                 break
-        hero_img = (f'<img src="{esc(hero_photo["src"])}" alt="{esc(hero_item["name"])}" '
-                    f'width="1200" height="900" fetchpriority="high">' if hero_photo else "")
+        hero_slides = "".join(
+            f'<div class="hero-carousel__slide" aria-hidden="{str(n != 0).lower()}">'
+            f'<img src="{esc(photo["src"])}" alt="{esc(hero_item["name"])}" width="1200" height="900" '
+            + ('fetchpriority="high">' if n == 0 else 'loading="lazy">')
+            + '</div>'
+            for n, photo in enumerate(hero_photos)
+        )
+        hero_dots = "".join(
+            f'<button type="button" class="hero-carousel__dot" data-hero-carousel-dot '
+            f'aria-label="Показать фотографию {n + 1}" aria-current="{str(n == 0).lower()}"></button>'
+            for n in range(len(hero_photos))
+        )
+        hero_media = (f'''<div class="hero__media hero-carousel" data-hero-carousel aria-roledescription="carousel"
+aria-label="Фотографии техники">
+<div class="hero-carousel__viewport"><div class="hero-carousel__track">{hero_slides}</div></div>
+<button type="button" class="hero-carousel__control hero-carousel__control--prev" data-hero-carousel-prev aria-label="Предыдущая фотография">&larr;</button>
+<button type="button" class="hero-carousel__control hero-carousel__control--next" data-hero-carousel-next aria-label="Следующая фотография">&rarr;</button>
+<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>
+</div>''' if hero_photos else "")
 
         tiles = "".join(self.category_tile(0, c) for c in self.categories)
         popular = [i for i in self.items if i["photos"]][:6]
@@ -680,7 +698,7 @@ class Site:
 <span class="badge badge--outline">Лизинг</span>
 </div>
 </div>
-<div class="hero__media">{hero_img}</div>
+{hero_media}
 </div>
 </section>
 
