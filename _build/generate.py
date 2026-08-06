@@ -30,6 +30,13 @@ BRANDS = {
                 "энергетика, Крайний Север.",
         "site": "https://zzgt.ru/",
     },
+    "ormast": {
+        "name": "Шмель",
+        "full": "Оружейные Мастерские — мини-погрузчики Шмель",
+        "note": "Многофункциональные мини-погрузчики с бортовым поворотом для строительных, "
+                "дорожных, коммунальных и складских работ.",
+        "site": "https://ormast.ru/",
+    },
 }
 
 NAV = [
@@ -60,6 +67,7 @@ CARD_THIRD = {
     "ekskavatory-pogruzchiki": ("depth", "Глубина копания"),
     "frontalnykh-pogruzchikov": ("capacity", "Грузоподъёмность"),
     "teleskopicheskie-pogruzchiki": ("capacity", "Грузоподъёмность"),
+    "mini-pogruzchiki": ("capacity", "Грузоподъёмность"),
     "avtogreydery": ("blade", "Длина отвала"),
     "buldozery": ("blade", "Отвал"),
     "snegobolotokhody": ("capacity", "Грузоподъёмность"),
@@ -73,7 +81,9 @@ CATEGORY_BLURB = {
     "frontalnykh-pogruzchikov": "Погрузочно-разгрузочные и земляные работы, склады сыпучих "
                                "материалов, карьеры.",
     "teleskopicheskie-pogruzchiki": "Подъём и перемещение грузов на высоту со сменным рабочим "
-                                   "оборудованием.",
+                                    "оборудованием.",
+    "mini-pogruzchiki": "Компактные погрузчики с бортовым поворотом для погрузки, планировки, "
+                         "уборки территории и работы со сменным оборудованием.",
     "ekskavatory-pogruzchiki": "Универсальные машины «два в одном» для коммунальных, дорожных "
                               "и благоустроительных работ.",
     "avtogreydery": "Планировка и профилирование земляного полотна при строительстве дорог, "
@@ -955,6 +965,8 @@ aria-label="Фотографии техники">
     def build_product_page(self, item):
         cfg = self.cfg
         brand = BRANDS[item["brand"]]
+        product_name = (item["name"] if item["name"].casefold().startswith(brand["name"].casefold())
+                        else f"{brand['name']} {item['name']}")
         depth = 3
         base = rel(depth)
 
@@ -1008,7 +1020,7 @@ aria-label="Фотографии техники">
         product_ld = json.dumps({
             "@context": "https://schema.org",
             "@type": "Product",
-            "name": f"{brand['name']} {item['name']}",
+            "name": product_name,
             "category": item["categoryTitle"],
             "brand": {"@type": "Brand", "name": brand["name"]},
             "image": [f"{cfg['domain']}/{p['src']}" for p in item["photos"][:4]],
@@ -1108,8 +1120,8 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <a class="contact-list__value" href="mailto:{esc(cfg['email'])}">{esc(cfg['email'])}</a></div></li>
 </ul>
 </div>
-<div>{request_form(cfg, 'product', f"Запрос цены: {brand['name']} {item['name']}",
-                   hidden={"Модель": f"{brand['name']} {item['name']}",
+<div>{request_form(cfg, 'product', f"Запрос цены: {product_name}",
+                   hidden={"Модель": product_name,
                            "Категория": item["categoryTitle"]})}</div>
 </div>
 </div>
@@ -1131,8 +1143,8 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
             f"мощность {power['value']} {power['unit']}" if power else None,
         ]))
         self.page(f"catalog/{item['brand']}/{item['category']}/{item['slug']}.html", depth,
-                  f"{brand['name']} {item['name']} — характеристики, фото, цена | {cfg['company']}",
-                  f"{item['categoryTitle']} {brand['name']} {item['name']}"
+                  f"{product_name} — характеристики, фото, цена | {cfg['company']}",
+                  f"{item['categoryTitle']} {product_name}"
                   + (f": {summary}. " if summary else ". ")
                   + "Полные технические характеристики, фотографии и запрос цены у дилера.",
                   "catalog/index.html", body,
