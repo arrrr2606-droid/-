@@ -594,17 +594,17 @@ li {
   top: 50%;
   z-index: 4;
   display: grid;
-  width: 54px;
-  height: 54px;
+  width: 46px;
+  height: 46px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 4px;
   color: var(--white);
-  background: rgba(10, 10, 10, 0.76);
-  font-size: 2rem;
+  background: rgba(10, 10, 10, 0.82);
+  font-size: 1.45rem;
   line-height: 1;
   place-items: center;
-  transform: translateY(-50%);
+  transform: translateY(-100%);
   transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease);
 }
 
@@ -616,11 +616,12 @@ li {
 }
 
 .hero-carousel__control--prev {
-  left: clamp(16px, 4vw, 68px);
+  right: clamp(16px, 4vw, 68px);
 }
 
 .hero-carousel__control--next {
   right: clamp(16px, 4vw, 68px);
+  transform: translateY(8px);
 }
 
 .hero-carousel__dots {

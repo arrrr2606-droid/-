@@ -282,7 +282,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260812-hero-controls"
+ASSET_VERSION = "20260812-hero-controls-v2"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
