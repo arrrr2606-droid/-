@@ -282,7 +282,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260729-hero-mix"
+ASSET_VERSION = "20260812-hero-motion"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -657,13 +657,27 @@ class Site:
             f'aria-label="Показать фотографию {n + 1}" aria-current="{str(n == 0).lower()}"></button>'
             for n in range(len(hero_photos))
         )
-        hero_media = (f'''<div class="hero__media hero-carousel" data-hero-carousel aria-roledescription="carousel"
-aria-label="Фотографии техники">
-<div class="hero-carousel__viewport"><div class="hero-carousel__track">{hero_slides}</div></div>
+        hero_carousel = (f'''<div class="hero-carousel__viewport"><div class="hero-carousel__track">{hero_slides}</div></div>
+<div class="hero__overlay"></div>
+<span class="diag-accent" style="right:12%"></span>
+<div class="shell hero__content">
+<p class="eyebrow">Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель</p>
+<h1>Спецтехника,<br>которая <em>работает</em></h1>
+<p class="hero__lead">Продаём экскаваторы, погрузчики, автогрейдеры, бульдозеры и гусеничные
+снегоболотоходы напрямую с заводов. Держим склад запчастей и обслуживаем технику весь срок службы.</p>
+<div class="hero__actions">
+<a class="btn" href="catalog/index.html">Каталог техники</a>
+<a class="btn btn--ghost" href="#zayavka">Запросить цену</a>
+</div>
+<div class="hero__badges">
+<span class="badge badge--green">{esc(cfg['tagline'])}</span>
+<span class="badge badge--outline">Заводская гарантия</span>
+<span class="badge badge--outline">Лизинг</span>
+</div>
+</div>
 <button type="button" class="hero-carousel__control hero-carousel__control--prev" data-hero-carousel-prev aria-label="Предыдущая фотография">&larr;</button>
 <button type="button" class="hero-carousel__control hero-carousel__control--next" data-hero-carousel-next aria-label="Следующая фотография">&rarr;</button>
-<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>
-</div>''' if hero_photos else "")
+<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>''' if hero_photos else "")
 
         tiles = "".join(self.category_tile(0, c) for c in self.categories)
         popular = [i for i in self.items if i["photos"]][:6]
@@ -689,26 +703,9 @@ aria-label="Фотографии техники">
         }, ensure_ascii=False)
 
         body = f"""<main>
-<section class="hero hex-bg">
-<span class="diag-accent" style="right:12%"></span>
-<div class="shell hero__grid">
-<div>
-<p class="eyebrow">Официальный дилер UMG и ВПК (ЗЗГТ)</p>
-<h1>Спецтехника,<br>которая <em>работает</em></h1>
-<p class="hero__lead">Продаём экскаваторы, погрузчики, автогрейдеры, бульдозеры и гусеничные
-снегоболотоходы напрямую с заводов. Держим склад запчастей и обслуживаем технику весь срок службы.</p>
-<div class="hero__actions">
-<a class="btn" href="catalog/index.html">Каталог техники</a>
-<a class="btn btn--ghost" href="#zayavka">Запросить цену</a>
-</div>
-<div class="hero__badges">
-<span class="badge badge--green">{esc(cfg['tagline'])}</span>
-<span class="badge badge--outline">Заводская гарантия</span>
-<span class="badge badge--outline">Лизинг</span>
-</div>
-</div>
-{hero_media}
-</div>
+<section class="hero hero--carousel" data-hero-carousel aria-roledescription="carousel"
+aria-label="Фотографии техники">
+{hero_carousel}
 </section>
 
 <section class="section section--deep" style="padding-top:0;padding-bottom:0">

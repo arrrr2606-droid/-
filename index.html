@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://alfa-mash.ru/">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/brand/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/img/brand/favicon-180.png">
-<link rel="stylesheet" href="assets/css/main.css?v=20260729-hero-mix">
+<link rel="stylesheet" href="assets/css/main.css?v=20260812-hero-motion">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "ООО «Альфа Машинери»", "alternateName": "Альфа Машинери", "url": "https://alfa-mash.ru", "logo": "https://alfa-mash.ru/assets/img/brand/logo.png", "telephone": "+7 917 756-26-06", "email": "alfa-mash@bk.ru", "address": {"@type": "PostalAddress", "addressLocality": "Уфа", "addressCountry": "RU"}, "description": "Официальный дилер UMG и ВПК (ЗЗГТ): продажа спецтехники, запчасти и сервисное обслуживание."}</script>
 </head>
 <body>
@@ -40,11 +40,13 @@
 </div>
 </header>
 <main>
-<section class="hero hex-bg">
+<section class="hero hero--carousel" data-hero-carousel aria-roledescription="carousel"
+aria-label="Фотографии техники">
+<div class="hero-carousel__viewport"><div class="hero-carousel__track"><div class="hero-carousel__slide" aria-hidden="false"><img src="assets/img/machines/umg/e225c/e225c-2.jpg" alt="E225C" width="1200" height="900" fetchpriority="high"></div><div class="hero-carousel__slide" aria-hidden="true"><img src="assets/img/machines/umg/wl30/wl30-2.jpg" alt="WL30" width="1200" height="900" loading="lazy"></div><div class="hero-carousel__slide" aria-hidden="true"><img src="assets/img/machines/umg/ag-140/ag-140-1.jpg" alt="АГ-140" width="1200" height="900" loading="lazy"></div><div class="hero-carousel__slide" aria-hidden="true"><img src="assets/img/machines/zzgt/gaz-34039/gaz-34039-1.jpg" alt="ГАЗ-34039" width="1200" height="900" loading="lazy"></div></div></div>
+<div class="hero__overlay"></div>
 <span class="diag-accent" style="right:12%"></span>
-<div class="shell hero__grid">
-<div>
-<p class="eyebrow">Официальный дилер UMG и ВПК (ЗЗГТ)</p>
+<div class="shell hero__content">
+<p class="eyebrow">Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель</p>
 <h1>Спецтехника,<br>которая <em>работает</em></h1>
 <p class="hero__lead">Продаём экскаваторы, погрузчики, автогрейдеры, бульдозеры и гусеничные
 снегоболотоходы напрямую с заводов. Держим склад запчастей и обслуживаем технику весь срок службы.</p>
@@ -58,14 +60,9 @@
 <span class="badge badge--outline">Лизинг</span>
 </div>
 </div>
-<div class="hero__media hero-carousel" data-hero-carousel aria-roledescription="carousel"
-aria-label="Фотографии техники">
-<div class="hero-carousel__viewport"><div class="hero-carousel__track"><div class="hero-carousel__slide" aria-hidden="false"><img src="assets/img/machines/umg/e225c/e225c-2.jpg" alt="E225C" width="1200" height="900" fetchpriority="high"></div><div class="hero-carousel__slide" aria-hidden="true"><img src="assets/img/machines/umg/wl30/wl30-2.jpg" alt="WL30" width="1200" height="900" loading="lazy"></div><div class="hero-carousel__slide" aria-hidden="true"><img src="assets/img/machines/umg/ag-140/ag-140-1.jpg" alt="АГ-140" width="1200" height="900" loading="lazy"></div><div class="hero-carousel__slide" aria-hidden="true"><img src="assets/img/machines/zzgt/gaz-34039/gaz-34039-1.jpg" alt="ГАЗ-34039" width="1200" height="900" loading="lazy"></div></div></div>
 <button type="button" class="hero-carousel__control hero-carousel__control--prev" data-hero-carousel-prev aria-label="Предыдущая фотография">&larr;</button>
 <button type="button" class="hero-carousel__control hero-carousel__control--next" data-hero-carousel-next aria-label="Следующая фотография">&rarr;</button>
 <div class="hero-carousel__dots" aria-label="Выбор фотографии"><button type="button" class="hero-carousel__dot" data-hero-carousel-dot aria-label="Показать фотографию 1" aria-current="true"></button><button type="button" class="hero-carousel__dot" data-hero-carousel-dot aria-label="Показать фотографию 2" aria-current="false"></button><button type="button" class="hero-carousel__dot" data-hero-carousel-dot aria-label="Показать фотографию 3" aria-current="false"></button><button type="button" class="hero-carousel__dot" data-hero-carousel-dot aria-label="Показать фотографию 4" aria-current="false"></button></div>
-</div>
-</div>
 </section>
 
 <section class="section section--deep" style="padding-top:0;padding-bottom:0">
@@ -372,7 +369,7 @@ aria-label="Фотографии техники">
 </div>
 </div>
 </footer>
-<script src="assets/js/config.js?v=20260729-hero-mix"></script>
-<script src="assets/js/site.js?v=20260729-hero-mix"></script>
+<script src="assets/js/config.js?v=20260812-hero-motion"></script>
+<script src="assets/js/site.js?v=20260812-hero-motion"></script>
 </body>
 </html>
