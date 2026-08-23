@@ -295,6 +295,7 @@ def head(cfg, depth, title, description, canonical, extra=""):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <meta name="yandex-verification" content="3b56a02ddbf961a8">
+<meta name="yandex-verification" content="bcc5639b80bc8ed0">
 <link rel="canonical" href="{esc(cfg['domain'] + '/' + canonical)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{esc(cfg['company'])}">
