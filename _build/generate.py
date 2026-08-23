@@ -294,6 +294,7 @@ def head(cfg, depth, title, description, canonical, extra=""):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
+<meta name="yandex-verification" content="bcc5639b80bc8ed0">
 <link rel="canonical" href="{esc(cfg['domain'] + '/' + canonical)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{esc(cfg['company'])}">
