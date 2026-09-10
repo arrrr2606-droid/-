@@ -93,6 +93,52 @@ CATEGORY_BLURB = {
                        "при температурах от +40 °C до −50 °C.",
 }
 
+# Полезные ориентиры для выбора на посадочных страницах категорий.
+CATEGORY_SELECTION = {
+    "gusenichnye-ekskavatory": "Сначала определите требуемые массу машины, глубину копания и объём ковша. "
+                                "Для работы в слабых грунтах важны ширина гусениц и удельное давление на грунт.",
+    "kolesnye-ekskavatory": "Сравните массу, радиус копания, скорость передвижения и варианты рабочего оборудования. "
+                            "Для города также важны габариты и возможность быстро переезжать между объектами.",
+    "frontalnykh-pogruzchikov": "При подборе смотрят на грузоподъёмность, объём ковша, высоту разгрузки и тип работ. "
+                                "Для карьера и склада сыпучих материалов нужна разная комплектация.",
+    "teleskopicheskie-pogruzchiki": "Ключевые параметры — грузоподъёмность на нужной высоте, высота подъёма и вылет стрелы. "
+                                  "Также стоит заранее определить необходимое навесное оборудование.",
+    "mini-pogruzchiki": "Для мини-погрузчика важны номинальная грузоподъёмность, ширина машины и перечень навесного оборудования. "
+                         "Это помогает подобрать модель под узкие проезды, планировку или уборку территории.",
+    "ekskavatory-pogruzchiki": "Сравните глубину копания, грузоподъёмность фронтального ковша и доступные исполнения рукояти. "
+                              "Так машина будет одинаково полезна и на земляных, и на погрузочных работах.",
+    "avtogreydery": "При выборе учитывают мощность двигателя, длину отвала, тяговый класс и комплектацию для конкретного типа дороги. "
+                    "Для круглогодичной работы заранее согласуйте дополнительное оборудование.",
+    "buldozery": "Основные параметры — тяговый класс, мощность, тип отвала и условия грунта. "
+                  "Для карьеров, дорожного строительства и планировки подбирают разные исполнения.",
+    "snegobolotokhody": "Уточните число пассажиров, полезную нагрузку, маршрут и сезон эксплуатации. "
+                         "Для работы в тундре, лесу или на промышленных объектах подбирают подходящий кузов и комплектацию.",
+}
+
+CATEGORY_GENITIVE = {
+    "gusenichnye-ekskavatory": "гусеничных экскаваторов",
+    "kolesnye-ekskavatory": "колёсных экскаваторов",
+    "frontalnykh-pogruzchikov": "фронтальных погрузчиков",
+    "teleskopicheskie-pogruzchiki": "телескопических погрузчиков",
+    "mini-pogruzchiki": "мини-погрузчиков",
+    "ekskavatory-pogruzchiki": "экскаваторов-погрузчиков",
+    "avtogreydery": "автогрейдеров",
+    "buldozery": "бульдозеров",
+    "snegobolotokhody": "гусеничных снегоболотоходов",
+}
+
+CATEGORY_SINGULAR = {
+    "gusenichnye-ekskavatory": "гусеничный экскаватор",
+    "kolesnye-ekskavatory": "колёсный экскаватор",
+    "frontalnykh-pogruzchikov": "фронтальный погрузчик",
+    "teleskopicheskie-pogruzchiki": "телескопический погрузчик",
+    "mini-pogruzchiki": "мини-погрузчик",
+    "ekskavatory-pogruzchiki": "экскаватор-погрузчик",
+    "avtogreydery": "автогрейдер",
+    "buldozery": "бульдозер",
+    "snegobolotokhody": "гусеничный снегоболотоход",
+}
+
 SERVICE_ITEMS = [
     ("Гарантийный ремонт", "Обслуживаем технику UMG и ЗЗГТ в течение гарантийного срока — "
      "с сохранением гарантии производителя."),
@@ -922,6 +968,52 @@ aria-label="Фотографии техники">
         cfg = self.cfg
         brand = BRANDS[cat["brand"]]
         cards = "".join(machine_card(cfg, 3, i) for i in cat["items"])
+        category_name = cat["title"].lower()
+        category_genitive = CATEGORY_GENITIVE.get(cat["slug"], category_name)
+        category_singular = CATEGORY_SINGULAR.get(cat["slug"], category_name)
+        city_locative = cfg.get("cityLocative", cfg["city"])
+        category_url = (f"{cfg['domain']}/catalog/{cat['brand']}/{cat['slug']}/")
+        selection = CATEGORY_SELECTION.get(cat["slug"],
+                                           "Сравните характеристики, условия работы и нужную комплектацию. "
+                                           "Менеджер поможет выбрать подходящую модель.")
+        faq = [
+            (f"Как выбрать {category_singular}?", selection),
+            ("Как узнать цену и срок поставки?",
+             "Оставьте заявку с нужной моделью или задачей. Подготовим коммерческое предложение "
+             "с ценой, сроком поставки, комплектацией и вариантом лизинга."),
+        ]
+        faq_html = "".join(
+            f'''<div class="accordion__item">
+<button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-{cat['slug']}-{n}">
+{esc(question)}<span class="accordion__icon" aria-hidden="true"></span></button>
+<div class="accordion__panel" id="faq-{cat['slug']}-{n}" hidden><p>{esc(answer)}</p></div>
+</div>'''
+            for n, (question, answer) in enumerate(faq, 1))
+        category_ld = json.dumps({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": f"{cat['title']} {brand['name']}",
+            "description": cat["blurb"],
+            "url": category_url,
+            "mainEntity": {
+                "@type": "ItemList",
+                "numberOfItems": len(cat["items"]),
+                "itemListElement": [
+                    {"@type": "ListItem", "position": n, "name": item["name"],
+                     "url": f"{cfg['domain']}/catalog/{item['brand']}/{item['category']}/{item['slug']}.html"}
+                    for n, item in enumerate(cat["items"], 1)
+                ],
+            },
+        }, ensure_ascii=False)
+        faq_ld = json.dumps({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type": "Question", "name": question,
+                 "acceptedAnswer": {"@type": "Answer", "text": answer}}
+                for question, answer in faq
+            ],
+        }, ensure_ascii=False)
 
         body = (breadcrumbs(cfg, 3, [("Главная", "index.html"), ("Каталог", "catalog/index.html"),
                                      (brand["name"], f"catalog/{cat['brand']}/index.html"),
@@ -950,6 +1042,27 @@ aria-label="Фотографии техники">
 </div>
 </div>
 </section>
+
+<section class="section section--panel">
+<div class="shell">
+<div class="section__head">
+<p class="eyebrow">Подбор техники</p>
+<h2>Как выбрать технику для работы</h2>
+</div>
+<div class="prose">
+<p>{esc(cat['blurb'])} {esc(cfg['company'])} поставляет технику в {esc(city_locative)},
+организует подбор модели, расчёт стоимости, лизинг, сервис и поставку запчастей.</p>
+<p>{esc(selection)}</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="shell">
+<div class="section__head"><p class="eyebrow">Вопросы</p><h2>Покупка и поставка</h2></div>
+<div class="accordion">{faq_html}</div>
+</div>
+</section>
 {cta_block(cfg, cat['slug'], f"Заявка: {cat['title']}",
            "Поможем выбрать между моделями",
            "Разница между исполнениями часто в ширине хода, длине рукояти и объёме ковша. "
@@ -957,9 +1070,12 @@ aria-label="Фотографии техники">
 </main>""")
 
         self.page(f"catalog/{cat['brand']}/{cat['slug']}/index.html", 3,
-                  f"{cat['title']} {brand['name']} — характеристики и цены | {cfg['company']}",
-                  f"{cat['blurb']} {len(cat['items'])} моделей {brand['name']} с характеристиками.",
-                  "catalog/index.html", body)
+                  f"Купить {category_name} {brand['name']} в {city_locative} | {cfg['company']}",
+                  f"Продажа {category_genitive} {brand['name']} в {city_locative}: {len(cat['items'])} моделей, "
+                  "характеристики, подбор, цена по запросу, лизинг и сервис.",
+                  "catalog/index.html", body,
+                  extra_head=(f'<script type="application/ld+json">{category_ld}</script>\n'
+                              f'<script type="application/ld+json">{faq_ld}</script>\n'))
 
     def build_product_page(self, item):
         cfg = self.cfg
