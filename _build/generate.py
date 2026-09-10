@@ -213,6 +213,21 @@ def esc(text):
     return html.escape(str(text), quote=True)
 
 
+def model_count_label(count):
+    """Возвращает количество моделей с корректным русским окончанием."""
+    last_two = count % 100
+    last = count % 10
+    if 11 <= last_two <= 14:
+        word = "моделей"
+    elif last == 1:
+        word = "модель"
+    elif 2 <= last <= 4:
+        word = "модели"
+    else:
+        word = "моделей"
+    return f"{count} {word}"
+
+
 UNITS = (r"кг|т|мм|см|км/ч|л/мин|л|кВт|л\.с\.|см³|м³|м²|м|%|град|шт|В|А|Ач|кПа|МПа|"
          r"Н\*м|Н·м|Нм|кгс|кН|об/мин")
 # Единицу измерения заводы пишут где придётся: «Грузоподъемность, кг.»,
@@ -748,6 +763,10 @@ class Site:
                 "streetAddress": cfg["address"], "addressCountry": "RU"}.items() if v},
             "description": "Официальный дилер UMG и ВПК (ЗЗГТ): продажа спецтехники, "
                            "запчасти и сервисное обслуживание.",
+            "areaServed": [
+                {"@type": "AdministrativeArea", "name": region}
+                for region in cfg.get("regions", [])
+            ],
         }, ensure_ascii=False)
 
         body = f"""<main>
@@ -763,6 +782,17 @@ aria-label="Фотографии техники">
 <div class="stats__item"><p class="stats__value">{len(self.items)}</p><p class="stats__label">моделей техники в каталоге с полными характеристиками</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.categories)}</p><p class="stats__label">категорий: от мини-погрузчиков до снегоболотоходов</p></div>
 <div class="stats__item"><p class="stats__value">24/7</p><p class="stats__label">приём заявок на сервис и подбор запчастей</p></div>
+</div>
+</div>
+</section>
+
+<section class="section section--panel">
+<div class="shell">
+<div class="section__head">
+<p class="eyebrow">Регионы поставки</p>
+<h2>Башкортостан и Татарстан</h2>
+<p>Поставляем спецтехнику в Уфу, по Республике Башкортостан и Республике Татарстан.
+Подбираем модель, рассчитываем условия доставки и согласовываем сервисное сопровождение для объекта.</p>
 </div>
 </div>
 </section>
@@ -1051,7 +1081,8 @@ aria-label="Фотографии техники">
 </div>
 <div class="prose">
 <p>{esc(cat['blurb'])} {esc(cfg['company'])} поставляет технику в {esc(city_locative)},
-организует подбор модели, расчёт стоимости, лизинг, сервис и поставку запчастей.</p>
+в регионах Башкортостана и Татарстана, организует подбор модели, расчёт стоимости,
+лизинг, сервис и поставку запчастей.</p>
 <p>{esc(selection)}</p>
 </div>
 </div>
@@ -1071,8 +1102,8 @@ aria-label="Фотографии техники">
 
         self.page(f"catalog/{cat['brand']}/{cat['slug']}/index.html", 3,
                   f"Купить {category_name} {brand['name']} в {city_locative} | {cfg['company']}",
-                  f"Продажа {category_genitive} {brand['name']} в {city_locative}: {len(cat['items'])} моделей, "
-                  "характеристики, подбор, цена по запросу, лизинг и сервис.",
+                  f"Продажа {category_genitive} {brand['name']} в {city_locative}: {model_count_label(len(cat['items']))}, "
+                  "характеристики, подбор, цена по запросу, лизинг и сервис. Поставка по Башкортостану и Татарстану.",
                   "catalog/index.html", body,
                   extra_head=(f'<script type="application/ld+json">{category_ld}</script>\n'
                               f'<script type="application/ld+json">{faq_ld}</script>\n'))
