@@ -513,7 +513,7 @@ def footer(cfg, depth, categories):
 <li><a href="tel:{esc(cfg['phoneHref'])}">{esc(cfg['phone'])}</a></li>
 <li><a href="mailto:{esc(cfg['email'])}">{esc(cfg['email'])}</a></li>
 <li>{esc(cfg['hours'])}</li>
-<li>{esc(full_address(cfg))}</li>
+<li>{esc(cfg.get('dealerCities', full_address(cfg)))}</li>
 </ul>
 </div>
 </div>
@@ -1628,7 +1628,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
         rows = [("Телефон", cfg["phone"], f"tel:{cfg['phoneHref']}"),
                 ("Электронная почта", cfg["email"], f"mailto:{cfg['email']}"),
                 ("Режим работы", cfg["hours"], None),
-                ("Адрес", full_address(cfg), None)]
+                ("Дилерские центры", cfg.get("dealerCities", full_address(cfg)), None)]
         if cfg.get("inn"):
             rows.append(("ИНН", cfg["inn"], None))
         if cfg.get("ogrn"):
