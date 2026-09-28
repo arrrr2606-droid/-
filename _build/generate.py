@@ -140,7 +140,7 @@ CATEGORY_SINGULAR = {
 }
 
 SERVICE_ITEMS = [
-    ("Гарантийный ремонт", "Обслуживаем технику UMG и ЗЗГТ в течение гарантийного срока — "
+    ("Гарантийный ремонт", "Обслуживаем технику UMG, ЗЗГТ и Шмель в течение гарантийного срока — "
      "с сохранением гарантии производителя."),
     ("Плановое ТО", "Регламентные работы по наработке моточасов: масла, фильтры, регулировки, "
      "диагностика по контрольным точкам."),
@@ -170,9 +170,9 @@ PARTS_GROUPS = [
 ]
 
 ADVANTAGES = [
-    ("Официальный дилер", "Прямые поставки с заводов UMG и ЗЗГТ. Заводская гарантия и "
+    ("Официальный дилер", "Прямые поставки с заводов UMG, ЗЗГТ и Шмель. Заводская гарантия и "
      "оригинальная документация на каждую машину."),
-    ("Склад запчастей", "Расходники и узлы под технику обоих производителей — "
+    ("Склад запчастей", "Расходники и узлы под технику всех производителей — "
      "простой машины стоит дороже детали."),
     ("Собственный сервис", "Гарантийный и постгарантийный ремонт, выездные бригады, "
      "плановое обслуживание по наработке."),
@@ -184,7 +184,7 @@ FINANCING_STEPS = [
     ("Расчёт", "Готовим предложения от лизинговых компаний и сравниваем удорожание."),
     ("Документы", "Собираем пакет: устав, бухгалтерская отчётность, паспорт руководителя."),
     ("Договор", "Подписываем договор лизинга и поставки, вносите аванс."),
-    ("Передача", "Отгружаем технику, передаём ПСМ и документы, ставим на учёт."),
+    ("Передача", "Отгружаем технику, передаём ПСМ и документы для постановки на учёт."),
 ]
 
 ICONS = {
@@ -213,19 +213,46 @@ def esc(text):
     return html.escape(str(text), quote=True)
 
 
-def model_count_label(count):
-    """Возвращает количество моделей с корректным русским окончанием."""
+def meta_description_for(item, limit=300):
+    """Собирает связное описание модели для мета-тегов и JSON-LD из пунктов
+    «Назначение и область применения», обрезая по границе слова, а не байта."""
+    fragments = [p.strip() for p in (item["description"].get("purpose") or []) if p and p.strip()]
+    parts = []
+    for frag in fragments:
+        if frag[-1] not in ".!?:;,":
+            frag += "."
+        parts.append(frag)
+    text = re.sub(r"\s+", " ", " ".join(parts)).strip()
+    text = re.sub(r"\s+([:;,.!?])", r"\1", text)
+    text = re.sub(r"\.{2,}", ".", text)
+
+    if not text:
+        brand = BRANDS.get(item["brand"], {}).get("name", "")
+        category = CATEGORY_SINGULAR.get(item["category"], item["categoryTitle"].lower())
+        return (f"{item['name']} — {category} {brand}. "
+                "Характеристики и комплектацию уточняйте у менеджера.")
+
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0].rstrip(" ,:;.–—-")
+    return cut + "…"
+
+
+def model_word(count):
+    """Возвращает «модель»/«модели»/«моделей» с корректным русским окончанием."""
     last_two = count % 100
     last = count % 10
     if 11 <= last_two <= 14:
-        word = "моделей"
-    elif last == 1:
-        word = "модель"
-    elif 2 <= last <= 4:
-        word = "модели"
-    else:
-        word = "моделей"
-    return f"{count} {word}"
+        return "моделей"
+    if last == 1:
+        return "модель"
+    if 2 <= last <= 4:
+        return "модели"
+    return "моделей"
+
+
+def model_count_label(count):
+    return f"{count} {model_word(count)}"
 
 
 UNITS = (r"кг|т|мм|см|км/ч|л/мин|л|кВт|л\.с\.|см³|м³|м²|м|%|град|шт|В|А|Ач|кПа|МПа|"
@@ -469,7 +496,7 @@ def footer(cfg, depth, categories):
 <div class="footer__grid">
 <div>
 <div class="footer__logo"><img src="{base}assets/img/brand/logo.png" alt="{esc(cfg['company'])}" width="798" height="205"></div>
-<p class="footer__about">Официальный дилер UMG и ВПК (ЗЗГТ). Продажа спецтехники, поставка
+<p class="footer__about">Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель. Продажа спецтехники, поставка
 оригинальных запчастей и сервисное обслуживание.</p>
 </div>
 <div>
@@ -494,7 +521,7 @@ def footer(cfg, depth, categories):
 <p>© 2020–2026 {esc(cfg['legalName'])}</p>
 <p>{esc(cfg['tagline'])}</p>
 <p class="footer__disclaimer">Технические характеристики и фотографии приведены по данным
-производителей UMG и ЗЗГТ и не являются публичной офертой. Комплектация и параметры
+производителей UMG, ЗЗГТ и Шмель и не являются публичной офертой. Комплектация и параметры
 могут быть изменены заводом-изготовителем.</p>
 </div>
 </div>
@@ -761,7 +788,7 @@ class Site:
             "address": {k: v for k, v in {
                 "@type": "PostalAddress", "addressLocality": cfg["city"],
                 "streetAddress": cfg["address"], "addressCountry": "RU"}.items() if v},
-            "description": "Официальный дилер UMG и ВПК (ЗЗГТ): продажа спецтехники, "
+            "description": "Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель: продажа спецтехники, "
                            "запчасти и сервисное обслуживание.",
             "areaServed": [
                 {"@type": "AdministrativeArea", "name": region}
@@ -778,8 +805,8 @@ aria-label="Фотографии техники">
 <section class="section section--deep" style="padding-top:0;padding-bottom:0">
 <div class="shell" style="padding:0">
 <div class="stats">
-<div class="stats__item"><p class="stats__value">4</p><p class="stats__label">завода-производителя, чью технику мы поставляем напрямую</p></div>
-<div class="stats__item"><p class="stats__value">{len(self.items)}</p><p class="stats__label">моделей техники в каталоге с полными характеристиками</p></div>
+<div class="stats__item"><p class="stats__value">3</p><p class="stats__label">завода-производителя, чью технику мы поставляем напрямую</p></div>
+<div class="stats__item"><p class="stats__value">{len(self.items)}</p><p class="stats__label">{model_word(len(self.items))} техники в каталоге с полными характеристиками</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.categories)}</p><p class="stats__label">категорий: от мини-погрузчиков до снегоболотоходов</p></div>
 <div class="stats__item"><p class="stats__value">24/7</p><p class="stats__label">приём заявок на сервис и подбор запчастей</p></div>
 </div>
@@ -859,9 +886,9 @@ aria-label="Фотографии техники">
 </main>"""
 
         self.page("index.html", 0,
-                  f"{cfg['company']} — спецтехника UMG и ЗЗГТ, запчасти и сервис",
-                  "Официальный дилер UMG и ВПК (ЗЗГТ). Экскаваторы, погрузчики, автогрейдеры, "
-                  "бульдозеры и снегоболотоходы: характеристики, цены, запчасти и сервис.",
+                  f"{cfg['company']} — спецтехника UMG, ЗЗГТ и Шмель, запчасти и сервис",
+                  "Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель. Экскаваторы, погрузчики, автогрейдеры, "
+                  "бульдозеры, снегоболотоходы и мини-погрузчики: характеристики, цены, запчасти и сервис.",
                   "index.html", body,
                   extra_head=f'<script type="application/ld+json">{org}</script>\n')
 
@@ -875,7 +902,7 @@ aria-label="Фотографии техники">
 <div class="cat-tile__body">
 <span class="badge badge--green" style="margin-bottom:10px">{esc(BRANDS[cat['brand']]['name'])}</span>
 <h3 class="cat-tile__title">{esc(cat['title'])}</h3>
-<p class="cat-tile__meta">{len(cat['items'])} моделей</p>
+<p class="cat-tile__meta">{model_count_label(len(cat['items']))}</p>
 </div>
 </a>"""
 
@@ -895,7 +922,7 @@ aria-label="Фотографии техники">
 <div class="section__head">
 <p class="eyebrow">{esc(brand['name'])}</p>
 <h2>{esc(brand['full'])}</h2>
-<p>{esc(brand['note'])} В каталоге {count} моделей.</p>
+<p>{esc(brand['note'])} В каталоге {model_count_label(count)}.</p>
 </div>
 <div class="grid grid--3">{tiles}</div>
 <p style="margin-top:26px"><a class="link-arrow" href="{brand_key}/index.html">Все модели {esc(brand['name'])}</a></p>
@@ -909,7 +936,7 @@ aria-label="Фотографии техники">
 <div class="section__head">
 <p class="eyebrow">Каталог техники</p>
 <h1>Вся техника {esc(cfg['company'])}</h1>
-<p>Два производителя, {len(self.categories)} категорий и {len(self.items)} моделей.
+<p>Три производителя, {len(self.categories)} категорий и {model_count_label(len(self.items))}.
 В каждой карточке — заводская таблица характеристик и фотографии машины.</p>
 </div>
 </div>
@@ -920,9 +947,10 @@ aria-label="Фотографии техники">
            "Напишите задачу — подберём машину и посчитаем стоимость.")}
 </main>""")
 
-        self.page("catalog/index.html", 1, f"Каталог спецтехники UMG и ЗЗГТ — {cfg['company']}",
+        self.page("catalog/index.html", 1, f"Каталог спецтехники UMG, ЗЗГТ и Шмель — {cfg['company']}",
                   "Полный каталог: гусеничные и колёсные экскаваторы, погрузчики, автогрейдеры, "
-                  "бульдозеры UMG и гусеничные снегоболотоходы ЗЗГТ с характеристиками.",
+                  "бульдозеры UMG, гусеничные снегоболотоходы ЗЗГТ и мини-погрузчики Шмель "
+                  "с характеристиками.",
                   "catalog/index.html", body)
 
     def build_brand_page(self, brand_key):
@@ -980,7 +1008,7 @@ aria-label="Фотографии техники">
 
         self.page(f"catalog/{brand_key}/index.html", 2,
                   f"Техника {brand['name']} — модели и характеристики | {cfg['company']}",
-                  f"{brand['note']} {len(items)} моделей с полными техническими характеристиками.",
+                  f"{brand['note']} {model_count_label(len(items))} с полными техническими характеристиками.",
                   "catalog/index.html", body)
 
     def build_category_page(self, cat):
@@ -1158,7 +1186,7 @@ aria-label="Фотографии техники">
             "category": item["categoryTitle"],
             "brand": {"@type": "Brand", "name": brand["name"]},
             "image": [f"{cfg['domain']}/{p['src']}" for p in item["photos"][:4]],
-            "description": (item["description"].get("purpose") or [item["categoryTitle"]])[0][:300],
+            "description": meta_description_for(item),
             "offers": {"@type": "Offer", "availability": "https://schema.org/InStock",
                        "priceCurrency": "RUB", "url": f"{cfg['domain']}/catalog/{item['brand']}/"
                                                       f"{item['category']}/{item['slug']}.html",
@@ -1300,7 +1328,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <div class="shell">
 <div class="section__head">
 <p class="eyebrow">Запчасти</p>
-<h1>Оригинальные запчасти UMG и ЗЗГТ</h1>
+<h1>Оригинальные запчасти UMG, ЗЗГТ и Шмель</h1>
 <p>Поставляем детали напрямую с заводов-изготовителей. Подбираем по серийному номеру машины,
 чтобы деталь подошла к вашему исполнению, а не «к похожей модели».</p>
 </div>
@@ -1329,8 +1357,8 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
            "в нужное исполнение узла.")}
 </main>""")
 
-        self.page("parts.html", 0, f"Запчасти для техники UMG и ЗЗГТ | {cfg['company']}",
-                  "Оригинальные запчасти UMG и ЗЗГТ: двигатель, гидравлика, ходовая часть, "
+        self.page("parts.html", 0, f"Запчасти для техники UMG, ЗЗГТ и Шмель | {cfg['company']}",
+                  "Оригинальные запчасти UMG, ЗЗГТ и Шмель: двигатель, гидравлика, ходовая часть, "
                   "трансмиссия, рабочее оборудование. Подбор по серийному номеру.",
                   "parts.html", body)
 
@@ -1349,7 +1377,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <div class="section__head">
 <p class="eyebrow">Сервис</p>
 <h1>Обслуживание техники</h1>
-<p>Ремонтируем и обслуживаем технику UMG и ЗЗГТ. Гарантийные работы проводим с сохранением
+<p>Ремонтируем и обслуживаем технику UMG, ЗЗГТ и Шмель. Гарантийные работы проводим с сохранением
 заводской гарантии, постгарантийные — на оригинальных запчастях.</p>
 </div>
 <div class="grid grid--3">{cards}</div>
@@ -1405,9 +1433,9 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
            "и назовём срок выезда.")}
 </main>""")
 
-        self.page("service.html", 0, f"Сервис и ремонт спецтехники UMG и ЗЗГТ | {cfg['company']}",
+        self.page("service.html", 0, f"Сервис и ремонт спецтехники UMG, ЗЗГТ и Шмель | {cfg['company']}",
                   "Гарантийный и постгарантийный ремонт, плановое ТО, выездные бригады, "
-                  "ремонт гидравлики и ходовой части техники UMG и ЗЗГТ.",
+                  "ремонт гидравлики и ходовой части техники UMG, ЗЗГТ и Шмель.",
                   "service.html", body)
 
     def build_financing(self):
@@ -1450,7 +1478,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 </main>""")
 
         self.page("financing.html", 0, f"Лизинг спецтехники | {cfg['company']}",
-                  "Лизинг техники UMG и ЗЗГТ для юридических лиц и ИП: аванс от 10%, срок до 60 "
+                  "Лизинг техники UMG, ЗЗГТ и Шмель для юридических лиц и ИП: аванс от 10%, срок до 60 "
                   "месяцев.",
                   "financing.html", body)
 
@@ -1515,8 +1543,8 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
            "в ближайший рабочий день.")}
 </main>""")
 
-        self.page("about.html", 0, f"О компании — официальный дилер UMG и ЗЗГТ | {cfg['company']}",
-                  f"{cfg['company']} — официальный дилер UMG и ВПК (ЗЗГТ): продажа спецтехники, "
+        self.page("about.html", 0, f"О компании — официальный дилер UMG, ЗЗГТ и Шмель | {cfg['company']}",
+                  f"{cfg['company']} — официальный дилер UMG, ВПК (ЗЗГТ) и Шмель: продажа спецтехники, "
                   "поставка оригинальных запчастей и сервисное обслуживание.",
                   "about.html", body)
 
@@ -1682,9 +1710,9 @@ def prepare(items):
         with open(TONE_CACHE, encoding="utf-8") as f:
             tone = json.load(f)
 
-    # <sup> при разборе схлопнулся в пробел: «кг/см 2» → «кг/см²».
+    # <sup> при разборе схлопнулся в пробел: «кг/см 2» → «кг/см²», «1м3» → «1м³».
     def superscripts(text):
-        return re.sub(r"\b(мм|см|дм|м)\s?([23])(?![\w-])",
+        return re.sub(r"(?<![A-Za-zА-Яа-яЁё])(мм|см|дм|м)\s?([23])(?![\w-])",
                       lambda m: m.group(1) + "²³"[int(m.group(2)) - 2], text)
 
     latin = str.maketrans("АВСЕНКМОРТХ", "ABCEHKMOPTX")
@@ -1693,6 +1721,11 @@ def prepare(items):
             if "cells" in row:
                 row["cells"] = [superscripts(c) for c in row["cells"]]
                 row["name"] = superscripts(row["name"])
+            elif "group" in row:
+                row["group"] = superscripts(row["group"])
+        for key, vals in item["description"].items():
+            if isinstance(vals, list):
+                item["description"][key] = [superscripts(v) for v in vals]
         # Заводы набирают индексы вроде «Е160С СТ» кириллицей — приводим к латинице.
         item["specColumns"] = [
             c.translate(latin) if item["brand"] == "umg" and len(c) < 25 and re.search(r"[A-Za-z]", c)
