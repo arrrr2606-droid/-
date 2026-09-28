@@ -770,7 +770,21 @@ class Site:
 <div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>''' if hero_photos else "")
 
         tiles = "".join(self.category_tile(0, c) for c in self.categories)
-        popular = [i for i in self.items if i["photos"]][:6]
+        # По одной модели из каждой категории по кругу, чтобы в блоке
+        # не оказались одни гусеничные экскаваторы (они первые в каталоге).
+        popular = []
+        pool = {c["slug"]: [i for i in c["items"] if i["photos"]] for c in self.categories}
+        while len(popular) < 6:
+            added = False
+            for c in self.categories:
+                bucket = pool[c["slug"]]
+                if bucket:
+                    popular.append(bucket.pop(0))
+                    added = True
+                    if len(popular) == 6:
+                        break
+            if not added:
+                break
         cards = "".join(machine_card(cfg, 0, i) for i in popular)
         advantages = "".join(
             icon_card(icon, title, text)
