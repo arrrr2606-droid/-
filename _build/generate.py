@@ -1111,8 +1111,9 @@ aria-label="Фотографии техники">
 <h2>Как выбрать технику для работы</h2>
 </div>
 <div class="prose">
-<p>{esc(cat['blurb'])} {esc(cfg['company'])} поставляет технику в {esc(city_locative)},
-организует подбор модели, расчёт стоимости, лизинг, сервис и поставку запчастей.</p>
+<p>{esc(cat['blurb'])} {esc(cfg['company'])} поставляет технику по Башкортостану и Татарстану,
+база — в {esc(city_locative)}: организуем подбор модели, расчёт стоимости, лизинг, сервис
+и поставку запчастей.</p>
 <p>{esc(selection)}</p>
 </div>
 </div>
@@ -1132,8 +1133,9 @@ aria-label="Фотографии техники">
 
         self.page(f"catalog/{cat['brand']}/{cat['slug']}/index.html", 3,
                   f"Купить {category_name} {brand['name']} в {city_locative} | {cfg['company']}",
-                  f"Продажа {category_genitive} {brand['name']} в {city_locative}: {model_count_label(len(cat['items']))}, "
-                  "характеристики, подбор, цена по запросу, лизинг и сервис. Поставка по Башкортостану и Татарстану.",
+                  f"Продажа {category_genitive} {brand['name']} по Башкортостану и Татарстану: "
+                  f"{model_count_label(len(cat['items']))}, характеристики, подбор, цена по запросу, "
+                  f"лизинг и сервис. База — в {city_locative}.",
                   "catalog/index.html", body,
                   extra_head=(f'<script type="application/ld+json">{category_ld}</script>\n'
                               f'<script type="application/ld+json">{faq_ld}</script>\n'))
