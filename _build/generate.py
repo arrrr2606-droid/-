@@ -1033,6 +1033,8 @@ aria-label="Фотографии техники">
         category_genitive = CATEGORY_GENITIVE.get(cat["slug"], category_name)
         category_singular = CATEGORY_SINGULAR.get(cat["slug"], category_name)
         city_locative = cfg.get("cityLocative", cfg["city"])
+        regions_phrase = "по " + " и по ".join(cfg.get("regionsDative", cfg.get("regions", [])))
+        dealer_cities = cfg.get("dealerCitiesLocative", city_locative)
         category_url = (f"{cfg['domain']}/catalog/{cat['brand']}/{cat['slug']}/")
         selection = CATEGORY_SELECTION.get(cat["slug"],
                                            "Сравните характеристики, условия работы и нужную комплектацию. "
@@ -1111,8 +1113,8 @@ aria-label="Фотографии техники">
 <h2>Как выбрать технику для работы</h2>
 </div>
 <div class="prose">
-<p>{esc(cat['blurb'])} {esc(cfg['company'])} поставляет технику по Башкортостану и Татарстану,
-база — в {esc(city_locative)}: организуем подбор модели, расчёт стоимости, лизинг, сервис
+<p>{esc(cat['blurb'])} {esc(cfg['company'])} поставляет технику {esc(regions_phrase)}, дилерские
+центры — в {esc(dealer_cities)}: организуем подбор модели, расчёт стоимости, лизинг, сервис
 и поставку запчастей.</p>
 <p>{esc(selection)}</p>
 </div>
@@ -1133,9 +1135,9 @@ aria-label="Фотографии техники">
 
         self.page(f"catalog/{cat['brand']}/{cat['slug']}/index.html", 3,
                   f"Купить {category_name} {brand['name']} в {city_locative} | {cfg['company']}",
-                  f"Продажа {category_genitive} {brand['name']} по Башкортостану и Татарстану: "
+                  f"Продажа {category_genitive} {brand['name']} {regions_phrase}: "
                   f"{model_count_label(len(cat['items']))}, характеристики, подбор, цена по запросу, "
-                  f"лизинг и сервис. База — в {city_locative}.",
+                  "лизинг и сервис.",
                   "catalog/index.html", body,
                   extra_head=(f'<script type="application/ld+json">{category_ld}</script>\n'
                               f'<script type="application/ld+json">{faq_ld}</script>\n'))
