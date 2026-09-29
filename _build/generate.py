@@ -46,6 +46,7 @@ NAV = [
     ("Сервис", "service.html"),
     ("Лизинг", "financing.html"),
     ("О компании", "about.html"),
+    ("Новости", "news/index.html"),
     ("Контакты", "contacts.html"),
 ]
 
@@ -396,7 +397,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260929-hero-glow"
+ASSET_VERSION = "20260929-news"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -690,6 +691,32 @@ def icon_card(icon, title, text):
             f'<h3>{esc(title)}</h3><p>{esc(text)}</p></div>')
 
 
+RU_MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня",
+             "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+
+
+def format_date_ru(iso_date):
+    year, month, day = iso_date.split("-")
+    return f"{int(day)} {RU_MONTHS[int(month) - 1]} {year}"
+
+
+def news_card(depth, post):
+    base = rel(depth)
+    href = f"{base}news/{post['slug']}.html"
+    media = (f'<img src="{base}{esc(post["image"])}" alt="{esc(post["title"])}" loading="lazy" '
+             f'width="640" height="360">'
+             if post.get("image") else '<span class="gallery__empty">Фото уточняется</span>')
+    return f"""<article class="news-card">
+<a class="news-card__media" href="{href}" tabindex="-1" aria-hidden="true">{media}</a>
+<div class="news-card__body">
+<p class="news-card__date">{esc(format_date_ru(post['date']))}</p>
+<h3 class="news-card__title"><a href="{href}">{esc(post['title'])}</a></h3>
+<p class="news-card__excerpt">{esc(post['excerpt'])}</p>
+<a class="link-arrow" href="{href}">Читать</a>
+</div>
+</article>"""
+
+
 def cta_block(cfg, form_id, subject, title, text):
     return f"""<section class="section section--panel">
 <div class="shell">
@@ -716,9 +743,10 @@ def cta_block(cfg, form_id, subject, title, text):
 # --- Страницы ----------------------------------------------------------------
 
 class Site:
-    def __init__(self, cfg, items):
+    def __init__(self, cfg, items, news=None):
         self.cfg = cfg
         self.items = items
+        self.news = sorted(news or [], key=lambda n: n["date"], reverse=True)
         self.categories = []
         seen = {}
         for item in items:
@@ -1700,6 +1728,90 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
                   "запчасти и сервис.",
                   "contacts.html", body)
 
+    # --- новости -------------------------------------------------------------
+
+    def build_news_index(self):
+        cfg = self.cfg
+        if self.news:
+            grid = f'<div class="grid grid--3">{"".join(news_card(1, p) for p in self.news)}</div>'
+        else:
+            grid = ('<p class="catalog-empty">Пока новостей нет — скоро здесь появятся новые '
+                    'модели в каталоге, акции и события компании.</p>')
+
+        body = (breadcrumbs(cfg, 1, [("Главная", "index.html"), ("Новости", None)])
+                + f"""<main>
+<section class="section hex-bg">
+<div class="shell">
+<div class="section__head">
+<p class="eyebrow">Новости</p>
+<h1>Новости {esc(cfg['company'])}</h1>
+<p>Новые модели в каталоге, изменения условий поставки, акции и события компании.</p>
+</div>
+{grid}
+</div>
+</section>
+{cta_block(cfg, "news", "Заявка со страницы новостей", "Есть вопрос по технике?",
+           "Напишите, что подбираете — ответим в ближайший рабочий день.")}
+</main>""")
+
+        self.page("news/index.html", 1, f"Новости | {cfg['company']}",
+                  "Новые модели в каталоге, акции и события компании "
+                  f"{cfg['company']}.",
+                  "news/index.html", body)
+
+    def build_news_post(self, post):
+        cfg = self.cfg
+        base = rel(1)
+        body_html = "".join(f"<p>{esc(p)}</p>" for p in post["body"])
+        cover = (f'<div class="news-post__cover"><img src="{base}{esc(post["image"])}" '
+                 f'alt="{esc(post["title"])}" width="1200" height="675"></div>'
+                 if post.get("image") else "")
+
+        others = [p for p in self.news if p["slug"] != post["slug"]][:3]
+        others_html = ""
+        if others:
+            others_html = f"""<section class="section section--panel">
+<div class="shell">
+<div class="section__head"><p class="eyebrow">Читайте также</p><h2>Другие новости</h2></div>
+<div class="grid grid--3">{"".join(news_card(1, p) for p in others)}</div>
+</div>
+</section>"""
+
+        article_ld = json.dumps({
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": post["title"],
+            "datePublished": post["date"],
+            "description": post["excerpt"],
+            "image": [f"{cfg['domain']}/{post['image']}"] if post.get("image") else [],
+            "author": {"@type": "Organization", "name": cfg["company"]},
+            "publisher": {"@type": "Organization", "name": cfg["company"],
+                          "logo": {"@type": "ImageObject",
+                                   "url": f"{cfg['domain']}/assets/img/brand/logo.png"}},
+            "mainEntityOfPage": f"{cfg['domain']}/news/{post['slug']}.html",
+        }, ensure_ascii=False)
+
+        body = (breadcrumbs(cfg, 1, [("Главная", "index.html"), ("Новости", "news/index.html"),
+                                     (post["title"], None)])
+                + f"""<main>
+<article class="section hex-bg">
+<div class="shell" style="max-width:820px">
+<p class="eyebrow">{esc(format_date_ru(post['date']))}</p>
+<h1>{esc(post['title'])}</h1>
+{cover}
+<div class="prose">{body_html}</div>
+<p style="margin-top:26px"><a class="link-arrow" href="{base}news/index.html">← Все новости</a></p>
+</div>
+</article>
+{others_html}
+{cta_block(cfg, "news-post", "Заявка со страницы новости", "Остались вопросы?",
+           "Напишите — ответим в ближайший рабочий день.")}
+</main>""")
+
+        self.page(f"news/{post['slug']}.html", 1, f"{post['title']} | {cfg['company']}",
+                  post["excerpt"], "news/index.html", body,
+                  extra_head=f'<script type="application/ld+json">{article_ld}</script>\n')
+
     def build_404(self):
         """Страница ошибки отдаётся с любого пути, поэтому ссылки в ней —
         только от корня сайта. На GitHub Pages корень проекта лежит в подпапке,
@@ -1799,13 +1911,16 @@ def main():
         cfg = json.load(f)
     with open(os.path.join(DATA, "catalog-raw.json"), encoding="utf-8") as f:
         items = prepare(json.load(f))
+    with open(os.path.join(DATA, "news.json"), encoding="utf-8") as f:
+        news = json.load(f)
 
     with open(os.path.join(DATA, "catalog.json"), "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
     shutil.rmtree(os.path.join(ROOT, "catalog"), ignore_errors=True)
+    shutil.rmtree(os.path.join(ROOT, "news"), ignore_errors=True)
 
-    site = Site(cfg, items)
+    site = Site(cfg, items, news)
     site.build_config_js()
     site.build_home()
     site.build_catalog_index()
@@ -1822,11 +1937,14 @@ def main():
     site.build_about()
     site.build_personal_data_consent()
     site.build_contacts()
+    site.build_news_index()
+    for post in site.news:
+        site.build_news_post(post)
     site.build_404()
     site.build_sitemap()
 
     print(f"Собрано страниц: {len(site.pages)}")
-    print(f"Моделей: {len(items)} · категорий: {len(site.categories)}")
+    print(f"Моделей: {len(items)} · категорий: {len(site.categories)} · новостей: {len(news)}")
 
 
 if __name__ == "__main__":
