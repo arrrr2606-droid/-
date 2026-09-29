@@ -44,7 +44,6 @@ NAV = [
     ("Каталог", "catalog/index.html"),
     ("Запчасти", "parts.html"),
     ("Сервис", "service.html"),
-    ("Лизинг", "financing.html"),
     ("О компании", "about.html"),
     ("Новости", "news/index.html"),
     ("Контакты", "contacts.html"),
