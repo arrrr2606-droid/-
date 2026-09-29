@@ -19,8 +19,8 @@ BRANDS = {
     "umg": {
         "name": "UMG",
         "full": "UMG (АО «ЭКСМАШ»)",
-        "note": "Российский производитель строительно-дорожной техники: экскаваторы, "
-                "погрузчики, автогрейдеры и бульдозеры.",
+        "note": "Группа заводов «Брянский Арсенал», «Челябинские строительно-дорожные машины» "
+                "и «Тверской экскаватор»: экскаваторы, погрузчики, автогрейдеры и бульдозеры.",
         "site": "https://umg-sdm.com/",
     },
     "zzgt": {
@@ -846,7 +846,7 @@ aria-label="Фотографии техники">
 <section class="section section--deep" style="padding-top:0;padding-bottom:0">
 <div class="shell" style="padding:0">
 <div class="stats">
-<div class="stats__item"><p class="stats__value">3</p><p class="stats__label">завода-производителя, чью технику мы поставляем напрямую</p></div>
+<div class="stats__item"><p class="stats__value">5</p><p class="stats__label">заводов-производителей, чью технику мы поставляем напрямую</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.items)}</p><p class="stats__label">{model_word(len(self.items))} техники в каталоге с полными характеристиками</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.categories)}</p><p class="stats__label">категорий: от мини-погрузчиков до снегоболотоходов</p></div>
 <div class="stats__item"><p class="stats__value">24/7</p><p class="stats__label">приём заявок на сервис и подбор запчастей</p></div>
@@ -977,7 +977,7 @@ aria-label="Фотографии техники">
 <div class="section__head">
 <p class="eyebrow">Каталог техники</p>
 <h1>Вся техника {esc(cfg['company'])}</h1>
-<p>Три производителя, {len(self.categories)} категорий и {model_count_label(len(self.items))}.
+<p>Пять заводов-производителей, {len(self.categories)} категорий и {model_count_label(len(self.items))}.
 В каждой карточке — заводская таблица характеристик и фотографии машины.</p>
 </div>
 </div>
