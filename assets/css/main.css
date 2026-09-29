@@ -534,6 +534,72 @@ li {
     linear-gradient(0deg, rgba(10, 10, 10, 0.42) 0%, transparent 38%);
 }
 
+/* Светящаяся сеть линий поверх фото — рисуется и гаснет по кругу. */
+.hero__glow {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+.hero__glow svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hero__glow path {
+  fill: none;
+  stroke: var(--alpha-green);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2200;
+  stroke-dashoffset: 2200;
+  filter: drop-shadow(0 0 5px rgba(57, 255, 20, 0.85));
+  opacity: 0;
+}
+
+.hero__glow circle {
+  fill: var(--alpha-green);
+  filter: drop-shadow(0 0 6px rgba(57, 255, 20, 0.9));
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__glow path {
+    animation: hero-glow-line 7s var(--ease) infinite;
+    animation-delay: var(--gd, 0s);
+  }
+
+  .hero__glow circle {
+    animation: hero-glow-node 7s var(--ease) infinite;
+    animation-delay: var(--gd, 0s);
+  }
+}
+
+@keyframes hero-glow-line {
+  0% { stroke-dashoffset: 2200; opacity: 0; }
+  8% { opacity: 1; }
+  46% { stroke-dashoffset: 0; opacity: 1; }
+  78% { stroke-dashoffset: 0; opacity: 1; }
+  94% { opacity: 0; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes hero-glow-node {
+  0%, 44% { opacity: 0; transform: scale(0.4); }
+  50% { opacity: 1; transform: scale(1.15); }
+  56% { transform: scale(0.9); }
+  78% { opacity: 1; transform: scale(1); }
+  94% { opacity: 0; transform: scale(0.6); }
+  100% { opacity: 0; }
+}
+
 .hero h1 {
   font-size: clamp(2.2rem, 5.4vw, 4rem);
   font-weight: 800;
@@ -1831,6 +1897,12 @@ a.contact-list__value:hover {
     --gutter: 16px;
   }
 
+  /* На узком экране viewBox 1200×700 растягивается по высоте и линии
+     режут заголовок — на мобильном декоративная сеть только мешает. */
+  .hero__glow {
+    display: none;
+  }
+
   .keyspecs {
     grid-template-columns: 1fr 1fr;
   }
@@ -1914,6 +1986,16 @@ a.contact-list__value:hover {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .hero__glow path {
+    stroke-dashoffset: 0 !important;
+    opacity: 0.45 !important;
+  }
+
+  .hero__glow circle {
+    opacity: 0.55 !important;
+    transform: scale(1) !important;
   }
 }
 
