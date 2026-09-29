@@ -9,7 +9,8 @@
       "Экспозицию UMG посетили в ходе совместного обхода выставки президент России Владимир Путин и премьер-министр Индии Нарендра Моди, а также министр промышленности и торговли РФ Антон Алиханов. Стенд компании получил Гран-при за лучшую концепцию выставочного пространства."
     ],
     "source": "https://umg-sdm.com/news/umg_predstavila_rossiyskuyu_dorozhno_stroitelnuyu_tekhniku_na_vystavke_innoprom_indiya/",
-    "sourceLabel": "UMG"
+    "sourceLabel": "UMG",
+    "image": "assets/img/news/innoprom-indiya-2026/cover.jpg"
   },
   {
     "slug": "innoprom-belarus-2026",
@@ -21,7 +22,8 @@
       "В экспозиции — макеты техники предприятий «Брянский арсенал» и Брянский тракторный завод: ключевые продукты группы в сегментах дорожно-строительной и сельскохозяйственной техники."
     ],
     "source": "https://umg-sdm.com/news/umg_sdm_predstavit_produktsiyu_bryanskikh_predpriyatiy_gruppy_na_vystavke_innoprom_belarus/",
-    "sourceLabel": "UMG"
+    "sourceLabel": "UMG",
+    "image": "assets/img/news/innoprom-belarus-2026/cover.jpg"
   },
   {
     "slug": "btz-254k-20-ispytaniya",
@@ -34,6 +36,7 @@
       "Альфа Машинери сельхозтехнику не поставляет — публикуем новость как часть жизни группы UMG, чью дорожно-строительную технику мы продаём и обслуживаем."
     ],
     "source": "https://umg-sdm.com/news/v_samarskoy_oblasti_nachalis_priemochnye_ispytaniya_modernizirovannogo_traktora_btz_254k_20/",
-    "sourceLabel": "UMG"
+    "sourceLabel": "UMG",
+    "image": "assets/img/news/btz-254k-20-ispytaniya/cover.jpg"
   }
 ]
