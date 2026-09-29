@@ -1766,6 +1766,10 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
         cover = (f'<div class="news-post__cover"><img src="{base}{esc(post["image"])}" '
                  f'alt="{esc(post["title"])}" width="1200" height="675"></div>'
                  if post.get("image") else "")
+        source = (f'<p style="margin-top:18px;font-size:.85rem;color:var(--muted)">Источник: '
+                   f'<a href="{esc(post["source"])}" rel="nofollow noopener" target="_blank" '
+                   f'style="color:var(--alpha-green)">{esc(post.get("sourceLabel", "сайт производителя"))}'
+                   f'</a></p>' if post.get("source") else "")
 
         others = [p for p in self.news if p["slug"] != post["slug"]][:3]
         others_html = ""
@@ -1800,6 +1804,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <h1>{esc(post['title'])}</h1>
 {cover}
 <div class="prose">{body_html}</div>
+{source}
 <p style="margin-top:26px"><a class="link-arrow" href="{base}news/index.html">← Все новости</a></p>
 </div>
 </article>
