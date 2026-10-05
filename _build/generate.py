@@ -115,6 +115,54 @@ CATEGORY_SELECTION = {
                          "Для работы в тундре, лесу или на промышленных объектах подбирают подходящий кузов и комплектацию.",
 }
 
+# Подробные ответы на частые вопросы покупателя — для приоритетных категорий.
+CATEGORY_GUIDE = {
+    "gusenichnye-ekskavatory": [
+        ("Где работает гусеничный экскаватор",
+         "Гусеничный ход даёт устойчивость и проходимость на слабых, мокрых и неровных грунтах, "
+         "поэтому такие машины берут для котлованов, траншей, карьеров, берегоукрепления и "
+         "промышленного строительства. Минус — переезд между объектами на трале, а не своим ходом."),
+        ("На что смотреть при выборе",
+         "Эксплуатационная масса и мощность двигателя определяют класс машины, объём ковша — "
+         "производительность, а глубина копания и радиус — рабочую зону. Если грунты слабые, "
+         "уточните ширину гусениц и удельное давление на грунт."),
+    ],
+    "kolesnye-ekskavatory": [
+        ("Когда колёсный экскаватор выгоднее гусеничного",
+         "Колёсный экскаватор переезжает между объектами своим ходом, не требует трала и не "
+         "разрушает дорожное покрытие. Его выбирают для городских работ, ЖКХ, ремонта дорог и "
+         "коммуникаций. На слабых грунтах и в карьерах гусеничные машины устойчивее."),
+        ("На что смотреть при выборе",
+         "Сравните массу, радиус копания, скорость передвижения и состав рабочего оборудования. "
+         "Для работы в городе важны габариты машины и наличие аутригеров и отвала."),
+    ],
+    "ekskavatory-pogruzchiki": [
+        ("Что такое экскаватор-погрузчик",
+         "Это колёсная машина «два в одном»: спереди — погрузочный ковш, сзади — экскаваторное "
+         "оборудование с рукоятью. Одна техника заменяет и экскаватор, и фронтальный погрузчик, "
+         "поэтому её берут коммунальные службы, дорожники и подрядчики, которым нужно быстро "
+         "переезжать с объекта на объект."),
+        ("Для каких работ подходит",
+         "Рытьё траншей под коммуникации, ремонт дорог, засыпка и планировка, погрузка и перемещение "
+         "сыпучих материалов, работа со сменным навесным оборудованием. Для крупных земляных работ "
+         "и карьеров лучше смотреть в сторону гусеничных экскаваторов."),
+        ("На что смотреть при выборе",
+         "Глубина копания, грузоподъёмность и объём фронтального ковша, мощность двигателя, "
+         "исполнение рукояти и комплектация кабины. Если планируется гидромолот или другое навесное "
+         "оборудование, заранее уточните, есть ли для него гидролиния."),
+    ],
+    "avtogreydery": [
+        ("Для чего нужен автогрейдер",
+         "Автогрейдер профилирует и планирует земляное полотно, формирует дорожное основание, "
+         "срезает и перемещает грунт, расчищает дороги от снега. Это основная техника при "
+         "строительстве и содержании дорог, аэродромов и площадок."),
+        ("На что смотреть при выборе",
+         "Тяговый класс и мощность двигателя, длина отвала, тип трансмиссии и дополнительное "
+         "оборудование — бульдозерный отвал, рыхлитель, снегоуборочная оснастка. Для круглогодичной "
+         "работы заранее согласуйте комплектацию под зимнее содержание дорог."),
+    ],
+}
+
 CATEGORY_GENITIVE = {
     "gusenichnye-ekskavatory": "гусеничных экскаваторов",
     "kolesnye-ekskavatory": "колёсных экскаваторов",
@@ -396,7 +444,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20260929-news"
+ASSET_VERSION = "20261005-seo"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -478,6 +526,7 @@ def build_megamenu(depth, categories):
     columns.append(
         f'<div><p class="megamenu__brand">Ещё</p><ul class="megamenu__list">'
         f'<li><a href="{base}catalog/index.html">Весь каталог</a></li>'
+        f'<li><a href="{base}catalog/ekskavatory/index.html">Все экскаваторы</a></li>'
         f'<li><a href="{base}parts.html">Запчасти</a></li>'
         f'<li><a href="{base}service.html">Сервис</a></li>'
         f'<li><a href="{base}financing.html">Лизинг</a></li></ul></div>')
@@ -954,9 +1003,10 @@ aria-label="Фотографии техники">
 </main>"""
 
         self.page("index.html", 0,
-                  f"{cfg['company']} — спецтехника UMG, ЗЗГТ и Шмель, запчасти и сервис",
-                  "Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель. Экскаваторы, погрузчики, автогрейдеры, "
-                  "бульдозеры, снегоболотоходы и мини-погрузчики: характеристики, цены, запчасти и сервис.",
+                  f"Экскаваторы, экскаваторы-погрузчики, автогрейдеры UMG — Уфа, Казань | {cfg['company']}",
+                  "Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель в Уфе и Казани: экскаваторы, "
+                  "экскаваторы-погрузчики, автогрейдеры и другая спецтехника. "
+                  "Цена по запросу, лизинг, запчасти, сервис.",
                   "index.html", body,
                   extra_head=f'<script type="application/ld+json">{org}</script>\n')
 
@@ -1098,6 +1148,12 @@ aria-label="Фотографии техники">
             ("Как узнать цену и срок поставки?",
              "Оставьте заявку с нужной моделью или задачей. Подготовим коммерческое предложение "
              "с ценой, сроком поставки, комплектацией и вариантом лизинга."),
+            (f"Можно ли купить {category_singular} в лизинг?",
+             "Да. Лизинг доступен юридическим лицам и ИП: аванс от 10%, срок до 60 месяцев. "
+             "Сравним предложения лизинговых компаний и покажем итоговое удорожание."),
+            (f"Где купить {category_singular} и обслуживать технику?",
+             f"Дилерские центры {cfg['company']} находятся в {dealer_cities}. Поставляем технику "
+             f"{regions_phrase}, организуем гарантийный и постгарантийный сервис и поставку запчастей."),
         ]
         faq_html = "".join(
             f'''<div class="accordion__item">
@@ -1106,6 +1162,12 @@ aria-label="Фотографии техники">
 <div class="accordion__panel" id="faq-{cat['slug']}-{n}" hidden><p>{esc(answer)}</p></div>
 </div>'''
             for n, (question, answer) in enumerate(faq, 1))
+        guide_html = "".join(f"<h3>{esc(title)}</h3><p>{esc(text)}</p>"
+                             for title, text in CATEGORY_GUIDE.get(cat["slug"], []))
+        hub_link = ""
+        if cat["slug"] in ("gusenichnye-ekskavatory", "kolesnye-ekskavatory"):
+            hub_link = ('<p><a class="link-arrow" href="../../ekskavatory/index.html">'
+                        'Все экскаваторы: гусеничные и колёсные</a></p>')
         category_ld = json.dumps({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
@@ -1140,7 +1202,7 @@ aria-label="Фотографии техники">
 <div class="shell">
 <div class="section__head">
 <p class="eyebrow">{esc(brand['name'])}</p>
-<h1>{esc(cat['title'])}</h1>
+<h1>{esc(cat['title'])} {esc(brand['name'])}</h1>
 <p>{esc(cat['blurb'])}</p>
 </div>
 <div data-catalog>
@@ -1171,6 +1233,8 @@ aria-label="Фотографии техники">
 центры — в {esc(dealer_cities)}: организуем подбор модели, расчёт стоимости, лизинг, сервис
 и поставку запчастей.</p>
 <p>{esc(selection)}</p>
+{guide_html}
+{hub_link}
 </div>
 </div>
 </section>
@@ -1188,12 +1252,130 @@ aria-label="Фотографии техники">
 </main>""")
 
         self.page(f"catalog/{cat['brand']}/{cat['slug']}/index.html", 3,
-                  f"Купить {category_name} {brand['name']} в {city_locative} | {cfg['company']}",
+                  f"Купить {category_name} {brand['name']} в {dealer_cities} | {cfg['company']}",
                   f"Продажа {category_genitive} {brand['name']} {regions_phrase}: "
                   f"{model_count_label(len(cat['items']))}, характеристики, подбор, цена по запросу, "
                   "лизинг и сервис.",
                   "catalog/index.html", body,
                   extra_head=(f'<script type="application/ld+json">{category_ld}</script>\n'
+                              f'<script type="application/ld+json">{faq_ld}</script>\n'))
+
+    def build_excavators_hub(self):
+        """Общая страница «Экскаваторы» под запрос «купить экскаватор»: гусеничные и колёсные вместе."""
+        cfg = self.cfg
+        slugs = ("gusenichnye-ekskavatory", "kolesnye-ekskavatory")
+        items = [i for i in self.items if i["category"] in slugs]
+        if not items:
+            return
+        base = rel(2)
+        dealer_cities = cfg.get("dealerCitiesLocative", cfg["city"])
+        regions_phrase = "по " + " и по ".join(cfg.get("regionsDative", cfg.get("regions", [])))
+        cards = "".join(machine_card(cfg, 2, i) for i in items)
+        count = model_count_label(len(items))
+
+        guide = "".join(f"<h3>{esc(t)}</h3><p>{esc(p)}</p>"
+                        for slug in slugs for t, p in CATEGORY_GUIDE[slug][:1])
+        links = "".join(
+            f'<li><a class="link-arrow" href="{base}catalog/{c["brand"]}/{c["slug"]}/index.html">'
+            f'{esc(c["title"])} {esc(BRANDS[c["brand"]]["name"])}</a></li>'
+            for c in self.categories if c["slug"] in slugs + ("ekskavatory-pogruzchiki",))
+
+        faq = [
+            ("Какой экскаватор выбрать: гусеничный или колёсный?",
+             "Гусеничный устойчивее на слабых и неровных грунтах и лучше подходит для карьеров, "
+             "котлованов и промышленного строительства. Колёсный переезжает между объектами своим "
+             "ходом и не разрушает покрытие — его берут для города, ЖКХ и дорожных работ."),
+            ("Сколько стоит экскаватор UMG?",
+             "Цена зависит от модели, комплектации и условий поставки. Оставьте заявку — подготовим "
+             "коммерческое предложение с ценой, сроком поставки и вариантом лизинга."),
+            ("Можно ли купить экскаватор в лизинг?",
+             "Да. Лизинг доступен юридическим лицам и ИП: аванс от 10%, срок до 60 месяцев. "
+             "Сравним предложения лизинговых компаний и покажем итоговое удорожание."),
+            (f"Где купить экскаватор UMG и обслуживать его?",
+             f"Дилерские центры {cfg['company']} находятся в {dealer_cities}. Поставляем технику "
+             f"{regions_phrase}, организуем гарантийный и постгарантийный сервис и поставку запчастей."),
+        ]
+        faq_html = "".join(
+            f'''<div class="accordion__item">
+<button type="button" class="accordion__btn" aria-expanded="false" aria-controls="faq-excavators-{n}">
+{esc(q)}<span class="accordion__icon" aria-hidden="true"></span></button>
+<div class="accordion__panel" id="faq-excavators-{n}" hidden><p>{esc(a)}</p></div>
+</div>''' for n, (q, a) in enumerate(faq, 1))
+        faq_ld = json.dumps({
+            "@context": "https://schema.org", "@type": "FAQPage",
+            "mainEntity": [{"@type": "Question", "name": q,
+                            "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq],
+        }, ensure_ascii=False)
+
+        body = (breadcrumbs(cfg, 2, [("Главная", "index.html"), ("Каталог", "catalog/index.html"),
+                                     ("Экскаваторы", None)])
+                + f"""<main>
+<section class="section hex-bg">
+<div class="shell">
+<div class="section__head">
+<p class="eyebrow">UMG</p>
+<h1>Экскаваторы UMG: гусеничные и колёсные</h1>
+<p>Продаём гусеничные и колёсные экскаваторы {esc(regions_phrase)}: {esc(count)} с полными
+техническими характеристиками. Дилерские центры {esc(cfg['company'])} — в {esc(dealer_cities)}.</p>
+</div>
+<div data-catalog>
+<div class="catalog-toolbar">
+<p class="catalog-toolbar__count" data-catalog-count></p>
+<label class="visually-hidden" for="sort-excavators">Сортировка</label>
+<select class="select" id="sort-excavators" data-catalog-sort>
+<option value="name">По названию</option>
+<option value="massDesc">Масса: по убыванию</option>
+<option value="massAsc">Масса: по возрастанию</option>
+<option value="powerDesc">Мощность: по убыванию</option>
+</select>
+</div>
+<div class="grid grid--3" data-catalog-grid>{cards}</div>
+<p class="catalog-empty" data-catalog-empty hidden>Моделей нет.</p>
+</div>
+</div>
+</section>
+
+<section class="section section--panel">
+<div class="shell">
+<div class="section__head">
+<p class="eyebrow">Подбор техники</p>
+<h2>Гусеничный или колёсный экскаватор</h2>
+</div>
+<div class="prose">
+{guide}
+<p>Если нужна универсальная машина для коммунальных и дорожных работ, посмотрите также
+экскаваторы-погрузчики.</p>
+<ul>{links}</ul>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="shell">
+<div class="section__head"><p class="eyebrow">Вопросы</p><h2>Покупка и поставка</h2></div>
+<div class="accordion">{faq_html}</div>
+</div>
+</section>
+{cta_block(cfg, "excavators", "Заявка: экскаваторы",
+           "Поможем выбрать экскаватор",
+           "Опишите задачу, грунты и объём работ — подберём модель и посчитаем стоимость с доставкой.")}
+</main>""")
+
+        collection_ld = json.dumps({
+            "@context": "https://schema.org", "@type": "CollectionPage",
+            "name": "Экскаваторы UMG", "url": f"{cfg['domain']}/catalog/ekskavatory/",
+            "mainEntity": {"@type": "ItemList", "numberOfItems": len(items), "itemListElement": [
+                {"@type": "ListItem", "position": n, "name": i["name"],
+                 "url": f"{cfg['domain']}/catalog/{i['brand']}/{i['category']}/{i['slug']}.html"}
+                for n, i in enumerate(items, 1)]},
+        }, ensure_ascii=False)
+
+        self.page("catalog/ekskavatory/index.html", 2,
+                  f"Купить экскаватор в {dealer_cities} — гусеничные и колёсные UMG | {cfg['company']}",
+                  f"Продажа гусеничных и колёсных экскаваторов UMG {regions_phrase}: {count}, "
+                  "характеристики, подбор, цена по запросу, лизинг и сервис.",
+                  "catalog/index.html", body,
+                  extra_head=(f'<script type="application/ld+json">{collection_ld}</script>\n'
                               f'<script type="application/ld+json">{faq_ld}</script>\n'))
 
     def build_product_page(self, item):
@@ -1203,6 +1385,14 @@ aria-label="Фотографии техники">
                         else f"{brand['name']} {item['name']}")
         depth = 3
         base = rel(depth)
+        type_singular = CATEGORY_SINGULAR.get(item["category"], item["categoryTitle"].lower())
+        product_title = f"Купить {type_singular} {product_name} — цена, характеристики | {cfg['company']}"
+        if len(product_title) > 80:
+            product_title = (f"{type_singular.capitalize()} {product_name} — "
+                             f"цена, характеристики | {cfg['company']}")
+        h1_type = type_singular.capitalize()
+        if product_name != item["name"]:
+            h1_type += f" {brand['name']}"
 
         if item["photos"]:
             main_photo = item["photos"][0]
@@ -1292,7 +1482,7 @@ aria-label="Фотографии техники">
 </div>
 <div>
 <span class="badge badge--green">{esc(brand['name'])}</span>
-<h1 class="product__title">{esc(item['name'])}</h1>
+<h1 class="product__title"><span class="product__type">{esc(h1_type)}</span> {esc(item['name'])}</h1>
 <p class="product__sub">{esc(item['categoryTitle'])} · {esc(brand['full'])}</p>
 <div class="keyspecs">{"".join(key_items)}</div>
 <div class="product__actions">
@@ -1377,10 +1567,11 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
             f"мощность {power['value']} {power['unit']}" if power else None,
         ]))
         self.page(f"catalog/{item['brand']}/{item['category']}/{item['slug']}.html", depth,
-                  f"{product_name} — характеристики, фото, цена | {cfg['company']}",
-                  f"{item['categoryTitle']} {product_name}"
+                  product_title,
+                  f"{type_singular.capitalize()} {product_name}"
                   + (f": {summary}. " if summary else ". ")
-                  + "Полные технические характеристики, фотографии и запрос цены у дилера.",
+                  + "Характеристики, фото, цена по запросу, лизинг. "
+                  + f"Дилерские центры в {cfg.get('dealerCitiesLocative', cfg['city'])}.",
                   "catalog/index.html", body,
                   extra_head=f'<script type="application/ld+json">{product_ld}</script>\n')
 
@@ -1933,6 +2124,7 @@ def main():
             site.build_brand_page(brand_key)
     for cat in site.categories:
         site.build_category_page(cat)
+    site.build_excavators_hub()
     for item in items:
         site.build_product_page(item)
     site.build_parts()

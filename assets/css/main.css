@@ -1152,6 +1152,15 @@ li {
   margin-bottom: 10px;
 }
 
+.product__type {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--alpha-green);
+}
+
 .product__sub {
   color: var(--muted);
   margin-bottom: 22px;
