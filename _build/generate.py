@@ -443,7 +443,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20261005-noglow"
+ASSET_VERSION = "20261005-nodiag"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -862,7 +862,6 @@ class Site:
             f'<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>')
         hero_carousel = (f'''{hero_media}
 <div class="hero__overlay"></div>
-<span class="diag-accent" style="right:12%"></span>
 <div class="shell hero__content">
 <p class="eyebrow">Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель</p>
 <h1>Спецтехника,<br>которая <em>работает</em></h1>

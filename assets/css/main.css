@@ -188,18 +188,6 @@ li {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0 56 16v32L28 64 0 48V16z' fill='none' stroke='%23ffffff' stroke-opacity='.05'/%3E%3Cpath d='M28 64 56 80v32L28 128 0 112V80z' fill='none' stroke='%23ffffff' stroke-opacity='.05'/%3E%3C/svg%3E");
 }
 
-/* Диагональный зелёный акцент 30° */
-.diag-accent {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--alpha-green);
-  transform: skewX(-30deg);
-  box-shadow: 0 0 24px rgba(57, 255, 20, 0.55);
-  pointer-events: none;
-}
-
 /* --- Кнопки ------------------------------------------------ */
 
 .btn {
