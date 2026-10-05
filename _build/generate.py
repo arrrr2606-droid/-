@@ -280,31 +280,6 @@ ICONS = {
               "<path d='M6 10 4 4M30 10l2-6M14 16v6m8-6v6'/>",
 }
 
-# Сеть из линий и узлов для .hero__glow: рисуется и гаснет по кругу
-# (--gd задаёт сдвиг по времени, чтобы линии загорались не разом).
-# Держим правее центра — левее лежит текст на тёмном участке оверлея.
-HERO_GLOW_PATHS = [
-    ("M560,70 L660,70 L730,140 L730,250", 0.0),
-    ("M660,70 L660,160", 0.6),
-    ("M730,250 L840,250 L900,310", 1.9),
-    ("M900,60 L900,160 L995,250 L995,400", 0.9),
-    ("M995,400 L1120,400", 2.6),
-    ("M900,310 L900,470 L995,560", 1.4),
-    ("M520,420 L660,420 L730,490 L730,610", 3.3),
-    ("M730,490 L860,490 L915,545", 3.9),
-    ("M320,600 L470,600 L540,530", 4.6),
-    ("M995,250 L1120,250", 2.1),
-]
-HERO_GLOW_NODES = [
-    (730, 250, 5, 1.9), (995, 400, 4, 2.6), (900, 310, 4, 1.4),
-    (660, 70, 4, 0.6), (730, 610, 5, 3.3), (915, 545, 4, 3.9),
-    (540, 530, 4, 4.6), (1120, 400, 3, 2.9), (995, 250, 3, 2.4),
-]
-HERO_GLOW = ('<svg viewBox="0 0 1200 700" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">'
-             + "".join(f'<path d="{d}" style="--gd:{delay}s"/>' for d, delay in HERO_GLOW_PATHS)
-             + "".join(f'<circle cx="{x}" cy="{y}" r="{r}" style="--gd:{delay}s"/>'
-                       for x, y, r, delay in HERO_GLOW_NODES)
-             + "</svg>")
 
 
 def esc(text):
@@ -468,7 +443,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20261005-herovideo"
+ASSET_VERSION = "20261005-noglow"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -887,7 +862,6 @@ class Site:
             f'<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>')
         hero_carousel = (f'''{hero_media}
 <div class="hero__overlay"></div>
-<div class="hero__glow">{HERO_GLOW}</div>
 <span class="diag-accent" style="right:12%"></span>
 <div class="shell hero__content">
 <p class="eyebrow">Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель</p>
