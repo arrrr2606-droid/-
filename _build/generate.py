@@ -202,6 +202,30 @@ SERVICE_ITEMS = [
      "раздаточных коробок."),
 ]
 
+PROGRAM_LESSEES = [
+    "Государственные и муниципальные органы",
+    "Региональные операторы по обращению с отходами",
+    "Компании с долей государства более 50%",
+    "Бюджетные и унитарные предприятия",
+    "Юридические лица и индивидуальные предприниматели",
+    "Физические лица",
+]
+PROGRAM_EQUIPMENT = ["Погрузчики", "Грейдеры", "Экскаваторы", "Бульдозеры"]
+PROGRAM_STATS = [
+    ("5–7%", "ставка по договору займа*"),
+    ("3–7 лет", "срок договора лизинга"),
+    ("до 10%", "среднегодовое удорожание по договору лизинга"),
+]
+PROGRAM_FOOTNOTE = ("* Условия программы меняются, актуальная информация — на сайте ДОМ.РФ. "
+                    "Участие в программе и подходящие модели уточняйте у менеджера.")
+
+
+def program_stats_html():
+    return "".join(f'<div><p class="program__value">{esc(v)}</p><p class="program__label">{esc(l)}</p></div>'
+                   for v, l in PROGRAM_STATS)
+PROGRAM_LESSORS = ["Сбер Лизинг", "ВТБ Лизинг", "Европлан", "Газпромбанк Автолизинг",
+                   "Балтийский лизинг", "Росагролизинг", "CARCADE", "РСХБ Лизинг"]
+
 PARTS_GROUPS = [
     ("Двигатель", "Фильтры, поршневая группа, топливная аппаратура, турбокомпрессоры, "
      "прокладки и ремкомплекты для ЯМЗ и Д-245."),
@@ -444,7 +468,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20261005-seo"
+ASSET_VERSION = "20261005-program3"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -865,7 +889,7 @@ class Site:
 <div class="hero__badges">
 <span class="badge badge--green">{esc(cfg['tagline'])}</span>
 <span class="badge badge--outline">Заводская гарантия</span>
-<span class="badge badge--outline">Лизинг</span>
+<a class="badge badge--outline" href="#program-home">Льготный лизинг</a>
 </div>
 </div>
 <button type="button" class="hero-carousel__control hero-carousel__control--prev" data-hero-carousel-prev aria-label="Предыдущая фотография">&larr;</button>
@@ -926,6 +950,28 @@ aria-label="Фотографии техники">
 <div class="stats__item"><p class="stats__value">{len(self.items)}</p><p class="stats__label">{model_word(len(self.items))} техники в каталоге с полными характеристиками</p></div>
 <div class="stats__item"><p class="stats__value">{len(self.categories)}</p><p class="stats__label">категорий: от мини-погрузчиков до снегоболотоходов</p></div>
 <div class="stats__item"><p class="stats__value">24/7</p><p class="stats__label">приём заявок на сервис и подбор запчастей</p></div>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="shell">
+<div class="program program--home" id="program-home">
+<div class="program__intro">
+<p class="eyebrow">Госпрограмма Минпромторга и ДОМ.РФ</p>
+<h2>Льготный лизинг техники</h2>
+<p>Экскаваторы, погрузчики, грейдеры и бульдозеры российского производства — по льготной программе
+лизинга. Подберём лизинговую компанию, рассчитаем платёж и подготовим заявку.</p>
+<ul class="program__chips">{"".join(f"<li>{esc(e)}</li>" for e in PROGRAM_EQUIPMENT)}</ul>
+<div class="hero__actions">
+<a class="btn" href="#zayavka">Узнать условия</a>
+<a class="btn btn--ghost" href="financing.html#program">О программе</a>
+</div>
+</div>
+<div class="program__side">
+<div class="program__stats program__stats--col">{program_stats_html()}</div>
+<p class="program__foot-note">{esc(PROGRAM_FOOTNOTE)}</p>
+</div>
 </div>
 </div>
 </section>
@@ -1707,6 +1753,28 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
             f'<div class="card"><p class="stats__value">{n}</p><h3>{esc(title)}</h3><p>{esc(text)}</p></div>'
             for n, (title, text) in enumerate(FINANCING_STEPS, 1))
 
+        def checklist(lines):
+            return '<ul class="program__list">' + "".join(f"<li>{esc(l)}</li>" for l in lines) + "</ul>"
+
+        program = f"""<div class="program" id="program">
+<div class="program__head">
+<p class="eyebrow">Госпрограмма Минпромторга и ДОМ.РФ</p>
+<h2>Льготный лизинг коммунальной и дорожно-строительной техники</h2>
+</div>
+<div class="program__stats">{program_stats_html()}</div>
+<div class="program__cols">
+<div><h3>Кто может участвовать</h3>{checklist(PROGRAM_LESSEES)}</div>
+<div><h3>Какая техника подходит</h3>{checklist(PROGRAM_EQUIPMENT)}
+<p class="program__note">Техника российского производства, соответствующая постановлению Правительства РФ № 719 от 17.07.2015 и кодам ОКПД 2 из утверждённого списка.</p></div>
+<div><h3>Лизинговые компании</h3>
+<ul class="program__chips">{"".join(f"<li>{esc(c)}</li>" for c in PROGRAM_LESSORS)}</ul></div>
+</div>
+<div class="program__foot">
+<p>{esc(PROGRAM_FOOTNOTE)} Источник: <a href="https://umg-sdm.com/lizing/komm_stroi_tek/" rel="nofollow noopener" target="_blank">UMG</a>.</p>
+<a class="btn" href="#zayavka">Узнать условия</a>
+</div>
+</div>"""
+
         body = (breadcrumbs(cfg, 0, [("Главная", "index.html"), ("Лизинг", None)])
                 + f"""<main>
 <section class="section hex-bg">
@@ -1716,6 +1784,16 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 <h1>Лизинг</h1>
 <p>Техника окупается в работе, а не на стоянке. Помогаем взять машину в лизинг с посильным
 авансом и графиком платежей под сезонность вашей выручки.</p>
+</div>
+{program}
+</div>
+</section>
+
+<section class="section">
+<div class="shell">
+<div class="section__head">
+<p class="eyebrow">Стандартный лизинг</p>
+<h2>Условия для юрлиц и ИП</h2>
 </div>
 <div class="grid grid--3">
 {icon_card('handshake', 'Лизинг для юрлиц и ИП', 'Аванс от 10%, срок до 60 месяцев. Предмет лизинга остаётся обеспечением — дополнительный залог обычно не нужен.')}
@@ -1734,6 +1812,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
 </div>
 </section>
 
+<div id="zayavka"></div>
 {cta_block(cfg, "financing", "Заявка на лизинг",
            "Рассчитаем лизинг под вашу технику",
            "Напишите модель и желаемый аванс — сравним предложения лизинговых компаний "
