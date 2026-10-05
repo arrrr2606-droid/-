@@ -468,7 +468,7 @@ def is_cutout(path, cache):
 
 # --- HTML-блоки --------------------------------------------------------------
 
-ASSET_VERSION = "20261005-program3"
+ASSET_VERSION = "20261005-herovideo"
 
 
 def head(cfg, depth, title, description, canonical, extra=""):
@@ -873,7 +873,19 @@ class Site:
             f'aria-label="Показать фотографию {n + 1}" aria-current="{str(n == 0).lower()}"></button>'
             for n in range(len(hero_photos))
         )
-        hero_carousel = (f'''<div class="hero-carousel__viewport"><div class="hero-carousel__track">{hero_slides}</div></div>
+        hero_video = cfg.get("heroVideo", "")
+        hero_video_mode = bool(hero_video) and os.path.exists(os.path.join(ROOT, hero_video)) and bool(hero_photos)
+        hero_media = (
+            f'<div class="hero-video"><video class="hero-video__media" muted loop playsinline '
+            f'preload="none" aria-hidden="true" tabindex="-1" poster="{esc(hero_photos[0][1]["src"])}" '
+            f'data-hero-video data-src="{esc(hero_video)}"></video></div>'
+            if hero_video_mode else
+            f'<div class="hero-carousel__viewport"><div class="hero-carousel__track">{hero_slides}</div></div>')
+        hero_controls = "" if hero_video_mode else (
+            '<button type="button" class="hero-carousel__control hero-carousel__control--prev" data-hero-carousel-prev aria-label="Предыдущая фотография">&larr;</button>\n'
+            '<button type="button" class="hero-carousel__control hero-carousel__control--next" data-hero-carousel-next aria-label="Следующая фотография">&rarr;</button>\n'
+            f'<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>')
+        hero_carousel = (f'''{hero_media}
 <div class="hero__overlay"></div>
 <div class="hero__glow">{HERO_GLOW}</div>
 <span class="diag-accent" style="right:12%"></span>
@@ -892,9 +904,7 @@ class Site:
 <a class="badge badge--outline" href="#program-home">Льготный лизинг</a>
 </div>
 </div>
-<button type="button" class="hero-carousel__control hero-carousel__control--prev" data-hero-carousel-prev aria-label="Предыдущая фотография">&larr;</button>
-<button type="button" class="hero-carousel__control hero-carousel__control--next" data-hero-carousel-next aria-label="Следующая фотография">&rarr;</button>
-<div class="hero-carousel__dots" aria-label="Выбор фотографии">{hero_dots}</div>''' if hero_photos else "")
+{hero_controls}''' if hero_photos else "")
 
         tiles = "".join(self.category_tile(0, c) for c in self.categories)
         # По одной модели из каждой категории по кругу, чтобы в блоке
@@ -938,8 +948,8 @@ class Site:
         }, ensure_ascii=False)
 
         body = f"""<main>
-<section class="hero hero--carousel" data-hero-carousel aria-roledescription="carousel"
-aria-label="Фотографии техники">
+<section class="hero hero--carousel{' hero--video' if hero_video_mode else ''}"{'' if hero_video_mode else ' data-hero-carousel aria-roledescription="carousel"'}
+aria-label="{'Главный экран' if hero_video_mode else 'Фотографии техники'}">
 {hero_carousel}
 </section>
 

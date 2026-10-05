@@ -181,6 +181,45 @@
     show(0);
   }
 
+  /* --- Фоновое видео на первом экране ------------------------ */
+
+  function initHeroVideo() {
+    var video = $("[data-hero-video]");
+    if (!video) return;
+
+    // На телефонах, при экономии трафика и без анимаций остаётся постер.
+    var wide = window.matchMedia && window.matchMedia("(min-width: 768px)").matches;
+    var reduced = window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var conn = navigator.connection || {};
+    if (!wide || reduced || conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "")) return;
+
+    function play() {
+      var promise = video.play();
+      if (promise && promise.catch) promise.catch(function () {});
+    }
+
+    function start() {
+      video.muted = true;
+      video.src = video.getAttribute("data-src");
+      play();
+    }
+
+    // Файл подгружаем после загрузки страницы, чтобы не мешать первому экрану.
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start);
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!video.getAttribute("src")) return;
+          if (entry.isIntersecting) play();
+          else video.pause();
+        });
+      }).observe(video);
+    }
+  }
+
   /* --- Карусель на первом экране ----------------------------- */
 
   function initHeroCarousel() {
@@ -539,6 +578,7 @@
     initAccordion();
     initGallery();
     initHeroCarousel();
+    initHeroVideo();
     initCatalog();
     initPhoneMask();
     initForms();
