@@ -411,6 +411,14 @@ def base_path(cfg):
     return "/" + after_host if after_host else ""
 
 
+def dealer_lines(cfg):
+    """Строки «город: адрес» для контактов и футера; без адреса — просто город."""
+    centers = cfg.get("dealerCenters")
+    if centers:
+        return [c.get("line") or c["city"] for c in centers]
+    return [cfg.get("dealerCities", full_address(cfg))]
+
+
 def full_address(cfg):
     """Город и улица через запятую; пока улица не заполнена — только город."""
     return ", ".join(part for part in (cfg["city"], cfg["address"]) if part.strip())
@@ -587,7 +595,7 @@ def footer(cfg, depth, categories):
 <li><a href="tel:{esc(cfg['phoneHref'])}">{esc(cfg['phone'])}</a></li>
 <li><a href="mailto:{esc(cfg['email'])}">{esc(cfg['email'])}</a></li>
 <li>{esc(cfg['hours'])}</li>
-<li>{esc(cfg.get('dealerCities', full_address(cfg)))}</li>
+{"".join(f"<li>{esc(line)}</li>" for line in dealer_lines(cfg))}
 </ul>
 </div>
 </div>
@@ -914,6 +922,14 @@ class Site:
                 "streetAddress": cfg["address"], "addressCountry": "RU"}.items() if v},
             "description": "Официальный дилер UMG, ВПК (ЗЗГТ) и Шмель: продажа спецтехники, "
                            "запчасти и сервисное обслуживание.",
+            "location": [
+                {"@type": "Place", "name": f"{cfg['company']} — {c['city']}",
+                 "address": {k: v for k, v in {
+                     "@type": "PostalAddress", "addressLocality": c["city"],
+                     "addressRegion": c.get("region"), "streetAddress": c.get("street"),
+                     "addressCountry": "RU"}.items() if v}}
+                for c in cfg.get("dealerCenters", [])
+            ],
             "areaServed": [
                 {"@type": "AdministrativeArea", "name": region}
                 for region in cfg.get("regions", [])
@@ -1935,7 +1951,7 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
         rows = [("Телефон", cfg["phone"], f"tel:{cfg['phoneHref']}"),
                 ("Электронная почта", cfg["email"], f"mailto:{cfg['email']}"),
                 ("Режим работы", cfg["hours"], None),
-                ("Дилерские центры", cfg.get("dealerCities", full_address(cfg)), None)]
+                ("Дилерские центры", dealer_lines(cfg), None)]
         if cfg.get("inn"):
             rows.append(("ИНН", cfg["inn"], None))
         if cfg.get("ogrn"):
@@ -1944,7 +1960,9 @@ style="color:var(--alpha-green)">{esc(brand['name'])}</a>). Завод впра�
         contact_html = "".join(
             f'<li><div><p class="contact-list__label">{esc(label)}</p>'
             + (f'<a class="contact-list__value" href="{esc(href)}">{esc(value)}</a>'
-               if href else f'<p class="contact-list__value">{esc(value)}</p>')
+               if href else '<p class="contact-list__value">'
+               + "<br>".join(esc(v) for v in ([value] if isinstance(value, str) else value))
+               + "</p>")
             + "</div></li>" for label, value, href in rows)
 
         messengers = ""

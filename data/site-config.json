@@ -18,6 +18,20 @@
   ],
   "dealerCitiesLocative": "Уфе и Казани",
   "dealerCities": "Уфа, Казань",
+  "dealerCenters": [
+    {
+      "city": "Уфа",
+      "line": "Уфа: ул. Сельская Богородская, д. 69",
+      "region": "Республика Башкортостан",
+      "street": "улица Сельская Богородская, дом 69"
+    },
+    {
+      "city": "Казань",
+      "line": "Казань",
+      "region": "Республика Татарстан",
+      "street": ""
+    }
+  ],
   "heroVideo": "assets/video/hero.mp4",
   "address": "",
   "hours": "Пн–Пт 9:00–18:00",
